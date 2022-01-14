@@ -1,5 +1,5 @@
 % Init
-
+% Black
 % Marshal(将)-8; Guardian(士)-9; Elephant(象)-10; Horse(马)-11; Chariot(车)-12; Cannon(砲)-13; Pawn(卒)-14
 % Red
 % General(帅)-1; Advisor(仕)-2; Minister(相)-3; Horse(马)-4; Chariot(车)-5;  Cannon(炮)-6; Soldiers(兵)-7; Empty(空)-0
@@ -78,72 +78,86 @@ board_print_line_element(Line,Index):-
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 1, !,
-	format('~c',[24101]), 	% 帅 
+	ansi_format([bold,fg(red)], '~c', [24101]),	% 帅 
+	% format('~c',[24101]), 	% 帅 
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 2, !,
-	format('~c',[20181]), 	% 仕
+	ansi_format([bold,fg(red)], '~c', [20181]),	% 仕 
+	% format('~c',[20181]), 	% 仕
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 3, !,
-	format('~c',[30456]),    % 相
+	ansi_format([bold,fg(red)], '~c', [30456]),	% 相 
+	% format('~c',[30456]),    % 相
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 4, !,
-	format('~c',[39340]),    % 马
+	ansi_format([bold,fg(red)], '~c', [39340]),	% 马 
+	% format('~c',[39340]),    % 马
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 5, !,
-	format('~c',[36554]),	% 车
+	ansi_format([bold,fg(red)], '~c', [36554]),	% 车 
+	% format('~c',[36554]),	% 车
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 6, !,
-	format('~c',[28846]),	% 炮
+	ansi_format([bold,fg(red)], '~c', [28846]),	% 炮 
+	% format('~c',[28846]),	% 炮
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 7, !,
-	format('~c',[20853]),	% 兵
+	ansi_format([bold,fg(red)], '~c', [20853]),	% 兵 
+	% format('~c',[20853]),	% 兵
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 8, !,
-	format('~c',[23559]),	% 将
+	ansi_format([bold,fg(black)], '~c', [23559]),	% 将 
+	% format('~c',[23559]),	% 将
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 9, !,
-	format('~c',[22763]),	% 士
+	ansi_format([bold,fg(black)], '~c', [24101]),	% 士 
+	% format('~c',[24101]),	% 士
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 10, !,
-	format('~c',[35937]),	% 象
+	ansi_format([bold,fg(black)], '~c', [35937]),	% 象 
+	% format('~c',[35937]),	% 象
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 11, !,
-	format('~c',[39532]),	% 马
+	ansi_format([bold,fg(black)], '~c', [39532]),	% 马 
+	% format('~c',[39532]),	% 马
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 12, !,
-	format('~c',[36710]),	% 车
+	ansi_format([bold,fg(black)], '~c', [36710]),	% 车 
+	% format('~c',[36710]),	% 车
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 13, !,
-	format('~c',[30770]),	% 砲
+	ansi_format([bold,fg(black)], '~c', [30770]),	% 砲 
+	% format('~c',[30770]),	% 砲
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 14, !,
-	format('~c',[21330]),	% 卒
+	ansi_format([bold,fg(black)], '~c', [21330]),	% 卒
+	% format('~c',[21330]),	% 卒
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
