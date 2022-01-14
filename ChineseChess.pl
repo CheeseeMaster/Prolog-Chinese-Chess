@@ -4,6 +4,6 @@
 
 % chessboard present
 
-$ end check
+% end check
 
-$ make move
+% make move
