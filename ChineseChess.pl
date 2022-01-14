@@ -18,7 +18,7 @@ board(game_board(A,B,C,D,E,F,G,H,I,J)):-
     functor(I,l,9),
     functor(J,l,9).
 
-empty_board(
+chessboard_init(
     game_board(
            l(12, 11, 10,  9,  8,  9, 10, 11, 12),
            l( 0,  0,  0,  0,  0,  0,  0,  0,  0),
@@ -78,72 +78,72 @@ board_print_line_element(Line,Index):-
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 1, !,
-	format('~c',[]), 	% 帅 
+	format('~c',[24101]), 	% 帅 
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 2, !,
-	format('~c',[]), 	% 仕
+	format('~c',[20181]), 	% 仕
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 3, !,
-	format('~c',[]),    % 相
+	format('~c',[30456]),    % 相
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 4, !,
-	format('~c',[]),    % 马
+	format('~c',[39340]),    % 马
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 5, !,
-	format('~c',[]),	% 车
+	format('~c',[36554]),	% 车
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 6, !,
-	format('~c',[]),	% 炮
+	format('~c',[28846]),	% 炮
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 7, !,
-	format('~c',[]),	% 兵
+	format('~c',[20853]),	% 兵
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 8, !,
-	format('~c',[]),	% 将
+	format('~c',[23559]),	% 将
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 9, !,
-	format('~c',[]),	% 士
+	format('~c',[22763]),	% 士
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 10, !,
-	format('~c',[]),	% 象
+	format('~c',[35937]),	% 象
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 11, !,
-	format('~c',[]),	% 马
+	format('~c',[39532]),	% 马
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 12, !,
-	format('~c',[]),	% 车
+	format('~c',[36710]),	% 车
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 13, !,
-	format('~c',[]),	% 砲
+	format('~c',[30770]),	% 砲
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
 	E == 14, !,
-	format('~c',[]),	% 卒
+	format('~c',[21330]),	% 卒
 	tab(2).
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
