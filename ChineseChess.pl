@@ -33,7 +33,10 @@ play :-
 	make_play(Player, Board).
 
 make_play(Player, Board) :-
-	write('Red turn.\n'),
+	write('It\'s '),
+	print_player(Player),
+	write(' turn.\n'),
+	check_available_moves(Board, Player, _),
 	write('Please choose the piece.\n')
 	repeat,
 	read(Piece),
@@ -44,8 +47,8 @@ make_play(Player, Board) :-
 	abolish(current/2),
 	assert(current(NextPlayer, NewBoard)),
 	play.
-make_play(Player, Board):-
+make_play(Player, Board) :-
 	change_player(Player, NextPlayer),
-	list_available_moves(Board, NextPlayer, _),
+	check_available_moves(Board, NextPlayer, _),
 	print_player(NextPlayer),
 	write(' wins the game.\n').
