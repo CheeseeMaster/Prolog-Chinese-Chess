@@ -461,9 +461,10 @@ read_input(Piece, Dest, Player, Board) :-
 		(   call(check_boundary, In_Dest, EndX, EndY, Dest)
 			->  (	call(check_dest, StartX, StartY, EndX, EndY, Player, Board) 
 					-> true, !
-					;	format('ERROR: ~w~n', ['Invalid dest: empty or enemy.']), fail
+					;	format('ERROR: ~w~n', ['Invalid walk.']), fail
 				), !
-			;   format('ERROR: ~w~n', ['Invalid dest. should be [a-j],[1-9].']),fail).
+			;   format('ERROR: ~w~n', ['Invalid dest. should be [a-j],[1-9].']),fail),
+		format('~w is ok.~n', [In_Dest]).
 
 % pos(Board, X, Y, E) :-
 % 	arg(Y,Board,T),
@@ -480,11 +481,12 @@ check_piece(X, Y, Player, Board, E) :-
 		E >= 8, E =< 14).
 
 check_dest(StartX, StartY, EndX, EndY, Player, Board) :-
-	write(StartX),nl,
-	write(StartY),nl,
-	write(EndX),nl,
-	write(EndY),nl.
-	% valid_step(Board, E, StartX, StartY, EndX, EndY).
+	% write(StartX),nl,
+	% write(StartY),nl,
+	% write(EndX),nl,
+	% write(EndY),nl.
+	pos(Board,EndX,EndY,E),
+	valid_step(Board, E, StartX, StartY, EndX, EndY).
 
 check_boundary(Pos, X, Y, Value) :-
 	atom_length(Pos, Len),
@@ -525,13 +527,14 @@ make_play(Player, Board) :-
 	write('It\'s '),
 	print_player(Player),
 	write(' turn.\n'),
-	read_input(Piece, Dest, Player, Board),
+	read_input(Piece, Dest, Player, Board).
 	move(Player, Board, NewBoard, Piece, Dest),
 	change_player(Player, NextPlayer),
-	abolish(current/2),
-	assert(current(NextPlayer, NewBoard)),
-	play.
+	write(NextPlayer),nl,
+	abolish(current/2).
+% 	assert(current(NextPlayer, NewBoard)),
+% 	play.
 
-make_play(Player, Board) :-
-	print_player(Player),
-	write(' wins the game.\n').
+% make_play(Player, Board) :-
+% 	print_player(Player),
+% 	write(' wins the game.\n').
