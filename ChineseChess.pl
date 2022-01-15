@@ -498,9 +498,9 @@ change_player(Player, NextPlayer) :-
 	select(NextPlayer, Rest_Player, _).
 
 print_player(red) :-
-	write('red').
+	ansi_format([bold,fg(red)], '~w', [red]).
 print_player(black) :-
-	write('black').
+	ansi_format([bold,fg(black)], '~w', [black]).
 
 % main
 main :-
