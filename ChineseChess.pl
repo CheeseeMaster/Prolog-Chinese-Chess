@@ -387,7 +387,7 @@ chess_at(game_board(A,B,C,D,E,F,G,H,I,J), X, Y, Piece) :-
 	write(A), nl,
 	write(X), nl,
 	% match(A, X, Piece),
-	arg(X, A, Piece),
+	arg(X, A, Piece).
 	% write('left chess_at A'), nl.
 
 chess_at(game_board(A,B,C,D,E,F,G,H,I,J), X, Y, Piece) :-
@@ -461,7 +461,7 @@ valid_move(Board, StartX, StartY, EndX, EndY) :-
 	pos(Board, EndX, EndY, B),
 	pos(Board, StartX, StartY, A),
 	in_black(A), in_red(B),
-	abs(EndX - StartX) + abs(EndY - StartY) > 0,
+	abs(EndX - StartX) + abs(EndY - StartY) > 0.
 	% write('valid_move1 out'),nl.
 valid_move(Board, StartX, StartY, EndX, EndY) :- 
 	% write('valid_move2 in'),nl,
@@ -470,7 +470,7 @@ valid_move(Board, StartX, StartY, EndX, EndY) :-
 	pos(Board, EndX, EndY, B),
 	pos(Board, StartX, StartY, A),
 	in_red(A), in_black(B),
-	abs(EndX - StartX) + abs(EndY - StartY) > 0,
+	abs(EndX - StartX) + abs(EndY - StartY) > 0.
 	% write('valid_move2 out'),nl.
 valid_move(Board, StartX, StartY, EndX, EndY) :- 
 	% write('valid_move3 in'),nl,
@@ -479,7 +479,7 @@ valid_move(Board, StartX, StartY, EndX, EndY) :-
 	pos(Board, EndX, EndY, B),
 	B = 0,
 	pos(Board, StartX, StartY, A),
-	abs(EndX - StartX) + abs(EndY - StartY) > 0,
+	abs(EndX - StartX) + abs(EndY - StartY) > 0.
 	% write('valid_move3 out'),nl.
 
 % chessboard present
