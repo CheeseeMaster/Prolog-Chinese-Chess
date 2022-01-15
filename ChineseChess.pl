@@ -1,8 +1,28 @@
+:-use_module(library(lists)).
+
 % Init
+% 
 % Black
 % Marshal(将)-8; Guardian(士)-9; Elephant(象)-10; Horse(马)-11; Chariot(车)-12; Cannon(砲)-13; Pawn(卒)-14
+
+% Marshal(将)-8; 
+% Guardian(士4)-9; Guardian(士6)-9; 
+% Elephant(象3)-10; Elephant(象7)-10; 
+% Horse(马2)-11; Horse(马8)-11; 
+% Chariot(车1)-12; Chariot(车9)-12; 
+% Cannon(砲2)-13; Cannon(砲8)-13; 
+% Pawn(卒1)-14, Pawn(卒3)-14, Pawn(卒5)-14, Pawn(卒7)-14, Pawn(卒9)-14
+
 % Red
 % General(帅)-1; Advisor(仕)-2; Minister(相)-3; Horse(马)-4; Chariot(车)-5;  Cannon(炮)-6; Soldiers(兵)-7; Empty(空)-0
+
+% Marshal(帅)-8; 
+% Guardian(仕4)-9; Guardian(仕6)-9; 
+% Elephant(相3)-10; Elephant(相7)-10; 
+% Horse(马2)-11; Horse(马8)-11; 
+% Chariot(车1)-12; Chariot(车9)-12; 
+% Cannon(炮2)-13; Cannon(炮8)-13; 
+% Pawn(兵1)-14, Pawn(兵3)-14, Pawn(兵5)-14, Pawn(兵7)-14, Pawn(兵9)-14
 
 % board(-Board).
 % Creates a board container, with uninitialized positions
@@ -165,10 +185,142 @@ board_print_line_element(Line,Index):-
 	tab(2).
 
 % move rules
+valid_move(Player, game_board(A,B,C,D,E,F,G,H,I,J), [X1|Y1], [X2|Y2]).
+	% TODO
+
+move(Player, game_board(A,B,C,D,E,F,G,H,I,J), [X1|Y1], [X2|Y2], NewBoard).
+
+move(Player, game_board(A,B,C,D,E,F,G,H,I,J), [X1|Y1], [X2|Y2], NewBoard):-
+	valid_move(Player, game_board(A,B,C,D,E,F,G,H,I,J), [X1|Y1], [X2|Y2]), 
+	move_from(game_board(A,B,C,D,E,F,G,H,I,J), [X1|Y1], 1, Target),
+	move_to(game_board(A,B,C,D,E,F,G,H,I,J), [X2|Y2], 1, Target).
+
+move_from([], [X1|Y1], Iterator, Target).
+
+move_from([G9,G8,G7,G6,G5,G4,G3,G2,G1|X], [X1|Y1], Iterator, Target) :-
+	X1 == Iterator, Y1 == G9, !, 
+	Target is G9,
+	G9 is 0,
+	Iterator_Next is Iterator + 1,
+	move_from(X, [X1|Y1], Iterator_Next, Target).
+
+move_from([G9,G8,G7,G6,G5,G4,G3,G2,G1|X], [X1|Y1], Iterator, Target) :-
+	X1 == Iterator, Y1 == G8, !, 
+	Target is G8,
+	G8 is 0,
+	Iterator_Next is Iterator + 1,
+	move_from(X, [X1|Y1], Iterator_Next, Target).
+
+move_from([G9,G8,G7,G6,G5,G4,G3,G2,G1|X], [X1|Y1], Iterator, Target) :-
+	X1 == Iterator, Y1 == G7, !, 
+	Target is G7,
+	G7 is 0,
+	Iterator_Next is Iterator + 1,
+	move_from(X, [X1|Y1], Iterator_Next, Target).
+
+move_from([G9,G8,G7,G6,G5,G4,G3,G2,G1|X], [X1|Y1], Iterator, Target) :-
+	X1 == Iterator, Y1 == G6, !, 
+	Target is G6,
+	G6 is 0,
+	Iterator_Next is Iterator + 1,
+	move_from(X, [X1|Y1], Iterator_Next, Target).
+
+move_from([G9,G8,G7,G6,G5,G4,G3,G2,G1|X], [X1|Y1], Iterator, Target) :-
+	X1 == Iterator, Y1 == G5, !, 
+	Target is G5,
+	G5 is 0,
+	Iterator_Next is Iterator + 1,
+	move_from(X, [X1|Y1], Iterator_Next, Target).
+
+move_from([G9,G8,G7,G6,G5,G4,G3,G2,G1|X], [X1|Y1], Iterator, Target) :-
+	X1 == Iterator, Y1 == G4, !, 
+	Target is G4,
+	G4 is 0,
+	Iterator_Next is Iterator + 1,
+	move_from(X, [X1|Y1], Iterator_Next, Target).
+
+move_from([G9,G8,G7,G6,G5,G4,G3,G2,G1|X], [X1|Y1], Iterator, Target) :-
+	X1 == Iterator, Y1 == G3, !, 
+	Target is G3,
+	G3 is 0,
+	Iterator_Next is Iterator + 1,
+	move_from(X, [X1|Y1], Iterator_Next, Target).
+
+move_from([G9,G8,G7,G6,G5,G4,G3,G2,G1|X], [X1|Y1], Iterator, Target) :-
+	X1 == Iterator, Y1 == G2, !, 
+	Target is G2,
+	G2 is 0,
+	Iterator_Next is Iterator + 1,
+	move_from(X, [X1|Y1], Iterator_Next, Target).
+
+move_from([G9,G8,G7,G6,G5,G4,G3,G2,G1|X], [X1|Y1], Iterator, Target) :-
+	X1 == Iterator, Y1 == G1, !, 
+	Target is G1,
+	G1 is 0,
+	Iterator_Next is Iterator + 1,
+	move_from(X, [X1|Y1], Iterator_Next, Target).
+
+move_to([], [X2|Y2], Iterator, Target).
+
+move_to([G9,G8,G7,G6,G5,G4,G3,G2,G1|X], [X2|Y2], Iterator, Target) :-
+	X1 == Iterator, Y1 == G9, !, 
+	G9 is Target,
+	Iterator_Next is Iterator + 1,
+	move_to(X, [X2|Y2], Iterator_Next, Target).
+
+move_to([G9,G8,G7,G6,G5,G4,G3,G2,G1|X], [X2|Y2], Iterator, Target) :-
+	X1 == Iterator, Y1 == G8, !, 
+	G8 is Target,
+	Iterator_Next is Iterator + 1,
+	move_to(X, [X2|Y2], Iterator_Next, Target).
+
+move_to([G9,G8,G7,G6,G5,G4,G3,G2,G1|X], [X2|Y2], Iterator, Target) :-
+	X1 == Iterator, Y1 == G7, !, 
+	G7 is Target,
+	Iterator_Next is Iterator + 1,
+	move_to(X, [X2|Y2], Iterator_Next, Target).
+
+move_to([G9,G8,G7,G6,G5,G4,G3,G2,G1|X], [X2|Y2], Iterator, Target) :-
+	X1 == Iterator, Y1 == G6, !, 
+	G6 is Target,
+	Iterator_Next is Iterator + 1,
+	move_to(X, [X2|Y2], Iterator_Next, Target).
+
+move_to([G9,G8,G7,G6,G5,G4,G3,G2,G1|X], [X2|Y2], Iterator, Target) :-
+	X1 == Iterator, Y1 == G5, !, 
+	G5 is Target,
+	Iterator_Next is Iterator + 1,
+	move_to(X, [X2|Y2], Iterator_Next, Target).
+
+move_to([G9,G8,G7,G6,G5,G4,G3,G2,G1|X], [X2|Y2], Iterator, Target) :-
+	X1 == Iterator, Y1 == G4, !, 
+	G4 is Target,
+	Iterator_Next is Iterator + 1,
+	move_to(X, [X2|Y2], Iterator_Next, Target).
+
+move_to([G9,G8,G7,G6,G5,G4,G3,G2,G1|X], [X2|Y2], Iterator, Target) :-
+	X1 == Iterator, Y1 == G3, !, 
+	G3 is Target,
+	Iterator_Next is Iterator + 1,
+	move_to(X, [X2|Y2], Iterator_Next, Target).
+
+move_to([G9,G8,G7,G6,G5,G4,G3,G2,G1|X], [X2|Y2], Iterator, Target) :-
+	X1 == Iterator, Y1 == G2, !, 
+	G2 is Target,
+	Iterator_Next is Iterator + 1,
+	move_to(X, [X2|Y2], Iterator_Next, Target).
+
+move_to([G9,G8,G7,G6,G5,G4,G3,G2,G1|X], [X2|Y2], Iterator, Target) :-
+	X1 == Iterator, Y1 == G1, !, 
+	G1 is Target,
+	Iterator_Next is Iterator + 1,
+	move_to(X, [X2|Y2], Iterator_Next, Target).
 
 % chessboard present
 
 % end check
+king_alive(Player, Board) :-
+	X >= Y,write('X is greater or equal').
 
 % make move
 
@@ -180,7 +332,6 @@ print_player(red) :-
 	write('red').
 print_player(black) :-
 	write('black').
-
 
 % main
 main :-
@@ -200,9 +351,9 @@ make_play(Player, Board) :-
 	write('It\'s '),
 	print_player(Player),
 	write(' turn.\n'),
-	check_available_moves(Board, Player, _),
+	% check_available_moves(Board, Player, _),
 	write('Please choose the piece.\n')
-	repeat,
+	% repeat,
 	read(Piece),
 	write('Please choose the destination.\n'),
 	read(Dest),
@@ -211,8 +362,10 @@ make_play(Player, Board) :-
 	abolish(current/2),
 	assert(current(NextPlayer, NewBoard)),
 	play.
+
 make_play(Player, Board) :-
 	change_player(Player, NextPlayer),
-	check_available_moves(Board, NextPlayer, _),
+	% check_available_moves(Board, NextPlayer, _),
+	king_alive(Player, Board),
 	print_player(NextPlayer),
 	write(' wins the game.\n').
