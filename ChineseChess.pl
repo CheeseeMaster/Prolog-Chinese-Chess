@@ -75,98 +75,54 @@ board_print_line(Line):-
     board_print_line_element(Line,9),
 	nl.
 
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 0, !, 	% just a white space
-	tab(4).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 1, !,
+board_print_element(0):- tab(4).
+board_print_element(1):- 
 	ansi_format([bold,fg(red)], '~c', [24101]),	% 帅 
-	% format('~c',[24101]), 	% 帅 
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 2, !,
+board_print_element(2):- 
 	ansi_format([bold,fg(red)], '~c', [20181]),	% 仕 
-	% format('~c',[20181]), 	% 仕
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 3, !,
+board_print_element(3):- 
 	ansi_format([bold,fg(red)], '~c', [30456]),	% 相 
-	% format('~c',[30456]),    % 相
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 4, !,
+board_print_element(4):- 
 	ansi_format([bold,fg(red)], '~c', [39340]),	% 马 
-	% format('~c',[39340]),    % 马
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 5, !,
+board_print_element(5):- 
 	ansi_format([bold,fg(red)], '~c', [36554]),	% 车 
-	% format('~c',[36554]),	% 车
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 6, !,
+board_print_element(6):-
 	ansi_format([bold,fg(red)], '~c', [28846]),	% 炮 
-	% format('~c',[28846]),	% 炮
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 7, !,
+board_print_element(7):- 
 	ansi_format([bold,fg(red)], '~c', [20853]),	% 兵 
-	% format('~c',[20853]),	% 兵
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 8, !,
+board_print_element(8):- 
 	ansi_format([bold,fg(black)], '~c', [23559]),	% 将 
-	% format('~c',[23559]),	% 将
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 9, !,
+board_print_element(9):- 
 	ansi_format([bold,fg(black)], '~c', [22763]),	% 士 
-	% format('~c',[24101]),	% 士
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 10, !,
+board_print_element(10):- 
 	ansi_format([bold,fg(black)], '~c', [35937]),	% 象 
-	% format('~c',[35937]),	% 象
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 11, !,
+board_print_element(11):- 
 	ansi_format([bold,fg(black)], '~c', [39532]),	% 马 
-	% format('~c',[39532]),	% 马
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 12, !,
+board_print_element(12):- 
 	ansi_format([bold,fg(black)], '~c', [36710]),	% 车 
-	% format('~c',[36710]),	% 车
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 13, !,
+board_print_element(13):- 
 	ansi_format([bold,fg(black)], '~c', [30770]),	% 砲 
-	% format('~c',[30770]),	% 砲
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 14, !,
+board_print_element(14):- 
 	ansi_format([bold,fg(black)], '~c', [21330]),	% 卒
-	% format('~c',[21330]),	% 卒
 	tab(2).
+
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
-	print(E),		    % shouldn't reach this state
-	tab(2).
+	board_print_element(E).
+
 
 % % helper predicate
 % indexOf([Element|_], Element, 0).
@@ -247,50 +203,56 @@ more_one(Board, X1, Y1, X2, Y2) :-
 	(X4 - X2) * (X4 - X1) < 0,
 	X3 \= X4.
 
+% check mate
+check(Board, E, X, Y) :-
+	pos(Board, OtherX, OtherY, E1),
+	E1 \= 1, E1 \= 8,
+	valid_step(Board, E1, OtherX, OtherY, X, Y),
+	in_black(E), in_red(E1).
+check(Board, E, X, Y) :-
+	pos(Board, OtherX, OtherY, E1),
+	E1 \= 1, E1 \= 8,
+	valid_step(Board, E1, OtherX, OtherY, X, Y),
+	in_red(E), in_black(E1).
+
 % move rules
 % 将
 valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 	E = 8,
-	abs(StartX - EndX) + abs(StartY - EndY) > 0,
-	abs(StartX - EndX) + abs(StartY - EndY) =< 1,
+	1 is abs(StartX - EndX) + abs(StartY - EndY),
 	in_black_center(EndX, EndY),
 	pos(Board, X, Y, 1),
-	not_meet(Board, X, Y, EndX, EndY).
+	not_meet(Board, X, Y, EndX, EndY),
+	\+check(Board, E, EndX, EndY).
 
 % 帅
 valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 	E = 1,
-	abs(StartX - EndX) + abs(StartY - EndY) > 0,
-	abs(StartX - EndX) + abs(StartY - EndY) =< 1,
+	1 is abs(StartX - EndX) + abs(StartY - EndY),
 	in_red_center(EndX, EndY),
 	pos(Board, X, Y, 8),
-	not_meet(Board, EndX, EndY, X, Y).
+	not_meet(Board, EndX, EndY, X, Y),
+	\+check(Board, E, EndX, EndY).
 
 % 士
 valid_step(_, E, StartX, StartY, EndX, EndY) :-
 	E = 9,
-	abs(StartX - EndX) >= 1,
-	abs(StartX - EndX) < 2,
-	abs(StartY - EndY) >= 1,
-	abs(StartY - EndY) < 2,
+	1 is abs(StartX - EndX),
+	1 is abs(StartY - EndY),
 	in_black_center(EndX, EndY).
 
 % 仕
 valid_step(_, E, StartX, StartY, EndX, EndY) :-
 	E = 2,
-	abs(StartX - EndX) >= 1,
-	abs(StartX - EndX) < 2,
-	abs(StartY - EndY) >= 1,
-	abs(StartY - EndY) < 2,
+	1 is abs(StartX - EndX),
+	1 is abs(StartY - EndY),
 	in_red_center(EndX, EndY).
 
 % 象
 valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 	E = 10,
-	abs(StartX - EndX) >= 2,
-	abs(StartX - EndX) < 3,
-	abs(StartY - EndY) >= 2,
-	abs(StartY - EndY) < 3,
+	2 is abs(StartX - EndX),
+	2 is abs(StartY - EndY),
 	in_black_field(EndX, EndY),
 	A is abs(StartX + EndX) / 2,
 	B is abs(StartY + EndY) / 2,
@@ -300,10 +262,8 @@ valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 % 相
 valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 	E = 3,
-	abs(StartX - EndX) >= 2,
-	abs(StartX - EndX) < 3,
-	abs(StartY - EndY) >= 2,
-	abs(StartY - EndY) < 3,
+	2 is abs(StartX - EndX),
+	2 is abs(StartY - EndY),
 	in_red_field(EndX, EndY),
 	A is abs(StartX + EndX) / 2,
 	B is abs(StartY + EndY) / 2,
@@ -312,74 +272,49 @@ valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 
 % 马
 valid_step(Board, E, StartX, StartY, EndX, EndY) :-
-	(E mod 7) >= 4,
-	(E mod 7) < 5,
-	abs(StartX - EndX) * abs(StartY - EndY) >= 2,
-	abs(StartX - EndX) * abs(StartY - EndY) < 3,
-	EndX > 0, EndX < 10,
-	EndY > 0, EndY < 11,
-	abs(StartX - EndX) >= 2,
-	abs(StartX - EndX) < 3,
+	4 is E mod 7,
+	2 is abs(StartX - EndX) * abs(StartY - EndY),
+	2 is abs(StartX - EndX),
 	A is abs(StartX + EndX) / 2,
 	pos(Board, A, StartY, E1),
 	E1 = 0.
 valid_step(Board, E, StartX, StartY, EndX, EndY) :-
-	(E mod 7) >= 4,
-	(E mod 7) < 5,
-	abs(StartX - EndX) * abs(StartY - EndY) >= 2,
-	abs(StartX - EndX) * abs(StartY - EndY) < 3,
-	EndX > 0, EndX < 10,
-	EndY > 0, EndY < 11,
-	abs(StartY - EndY) >= 2,
-	abs(StartY - EndY) < 3,
+	4 is E mod 7,
+	2 is abs(StartX - EndX) * abs(StartY - EndY),
+	2 is abs(StartY - EndY),
 	A is abs(StartY + EndY) / 2,
 	pos(Board, StartX, A, E1),
 	E1 = 0.
 
 % 车
 valid_step(Board, E, StartX, StartY, EndX, EndY) :-
-	(E mod 7) >= 5,
-	(E mod 7) < 6,
+	5 is E mod 7,
 	abs(StartX - EndX) * abs(StartY - EndY) >= 0,
 	abs(StartX - EndX) * abs(StartY - EndY) < 1,
 	abs(StartX - EndX) + abs(StartY - EndY) > 0,
-	EndX > 0, EndX < 10,
-	EndY > 0, EndY < 11,
 	\+not_reach(Board, StartX, StartY, EndX, EndY).
 
 % 卒
 valid_step(_, E, StartX, StartY, EndX, EndY) :-
 	E = 14,
 	EndX = StartX,
-	EndX > 0, EndX < 10,
-	EndY > 0, EndY < 11,
-	EndY - StartY >= 1,
-	EndY - StartY < 2.
+	1 is EndY - StartY.
 valid_step(_, E, StartX, StartY, EndX, EndY) :-
 	E = 14,
-	EndX > 0, EndX < 10,
-	EndY > 0, EndY < 11,
 	in_red_field(StartX, StartY),
 	EndY = StartY,
-	abs(EndX - StartX) >= 1,
-	abs(EndX - StartX) < 2.
+	1 is abs(EndX - StartX).
 
 % 兵
 valid_step(_, E, StartX, StartY, EndX, EndY) :-
 	E = 7,
 	EndX = StartX,
-	EndX > 0, EndX < 10,
-	EndY > 0, EndY < 11,
-	StartY - EndY >= 1,
-	StartY - EndY < 2.
+	1 is StartY - EndY.
 valid_step(_, E, StartX, StartY, EndX, EndY) :-
 	E = 7,
-	EndX > 0, EndX < 10,
-	EndY > 0, EndY < 11,
 	in_black_field(StartX, StartY),
 	EndY = StartY,
-	abs(EndX - StartX) >= 1,
-	abs(EndX - StartX) < 2.
+	1 is abs(EndX - StartX).
 
 % 炮
 valid_step(Board, E, StartX, StartY, EndX, EndY) :-
@@ -387,33 +322,23 @@ valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 	valid_eat(Board, E, StartX, StartY, EndX, EndY).
 
 valid_walk(Board, E, StartX, StartY, EndX, EndY) :-
-	(E mod 7) >= 6,
-	(E mod 7) < 7,
-	abs(StartX - EndX) * abs(StartY - EndY) >= 0,
-	abs(StartX - EndX) * abs(StartY - EndY) < 1,
+	6 is E mod 7,
+	0 is abs(StartX - EndX) * abs(StartY - EndY),
 	abs(StartX - EndX) \= abs(StartY - EndY),
-	EndX > 0, EndX < 10,
-	EndY > 0, EndY < 11,
 	StartX = EndX,
 	\+not_reach(Board, StartX, StartY, EndX, EndY),
 	pos(Board, EndX, EndY, 0).
 valid_walk(Board, E, StartX, StartY, EndX, EndY) :-
-	(E mod 7) >= 6,
-	(E mod 7) < 7,
-	abs(StartX - EndX) * abs(StartY - EndY) >= 0,
-	abs(StartX - EndX) * abs(StartY - EndY) < 1,
+	6 is E mod 7,
+	0 is abs(StartX - EndX) * abs(StartY - EndY),
 	abs(StartX - EndX) \= abs(StartY - EndY),
-	EndX > 0, EndX < 10,
-	EndY > 0, EndY < 11,
 	StartY = EndY,
 	\+not_reach(Board, StartX, StartY, EndX, EndY),
 	pos(Board, EndX, EndY, 0).
 
 valid_eat(Board, E, StartX, StartY, EndX, EndY) :-
-	(E mod 7) >= 6,
-	(E mod 7) < 7,
-	abs(StartX - EndX) * abs(StartY - EndY) >= 0,
-	abs(StartX - EndX) * abs(StartY - EndY) < 1,
+	6 is E mod 7,
+	0 is abs(StartX - EndX) * abs(StartY - EndY),
 	abs(StartX - EndX) \= abs(StartY - EndY),
 	pos(Board, EndX, EndY, E1),
 	E1 \= 0,	
@@ -560,15 +485,18 @@ valid_move(Board, StartX, StartY, EndX, EndY) :-
 % chessboard present
 
 % end check
-king_alive(_, _).
+king_alive(red, Board) :-
+	pos(Board, X, Y, 1),
+	pos(Board, X1, Y1, 0),
+	valid_move(Board, 1, [X, Y], [X1, Y1]).
 
-% 将8 帅1
-% king_alive(red, Board) :-
-% 	locate(Board, 1, X, Y),
-% 	once(valid_step(Board, E, X, Y, X+1, Y)),
-% 	once(valid_step(Board, E, X, Y, X, Y+1)),
-% 	once(valid_step(Board, E, X, Y, X-1, Y)),
-% 	once(valid_step(Board, E, X, Y, X, Y-1)).
+king_alive(black, Board) :-
+	pos(Board, X, Y, 8),
+	pos(Board, X1, Y1, 0),
+	valid_move(Board, 8, [X, Y], [X1, Y1]).
+
+% make move
+move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, [X1|Y1], [X2|Y2]).
 
 % king_alive(black, Board).
 % 	% TODO
@@ -622,20 +550,23 @@ read_input(Piece, Dest, Player, Board) :-
         format('~w:~n', ['Enter the piece. e.g. a1.']),
 		catch(read(In_Piece), _, fail),
         (   call(check_boundary, In_Piece, StartX, StartY, Piece)
-        	->  (	call(check_piece, StartX, StartY, Player, Board) 
+        	->  (	call(check_piece, StartX, StartY, Player, Board, E) 
 					-> true, !
 					;	format('ERROR: ~w~n', ['Invalid piece: empty or enemy.']), fail
 				), !
 			;   format('ERROR: ~w~n', ['Invalid piece. should be [a-j],[1-9].']),fail),
+		board_print_element(E),
+		format('is ok.~n'),
 	repeat,
-		format('~w:~n', ['Enter the dest. e.g. a1.']),
+		format('~w:~n', ['Enter the destination. e.g. a1.']),
 		catch(read(In_Dest), _, fail),
 		(   call(check_boundary, In_Dest, EndX, EndY, Dest)
-			->  (	call(check_dest, StartX, StartY, EndX, EndY, Player, Board) 
+			->  (	call(check_dest, StartX, StartY, EndX, EndY, Player, Board, E) 
 					-> true, !
-					;	format('ERROR: ~w~n', ['Invalid dest: empty or enemy.']), fail
+					;	format('ERROR: ~w~n', ['Invalid walk.']), fail
 				), !
-			;   format('ERROR: ~w~n', ['Invalid dest. should be [a-j],[1-9].']),fail).
+			;   format('ERROR: ~w~n', ['Invalid dest. should be [a-j],[1-9].']),fail),
+		format('~w is ok.~n', [In_Dest]).
 
 % pos(Board, X, Y, E) :-
 % 	arg(Y,Board,T),
@@ -645,18 +576,14 @@ read_input(Piece, Dest, Player, Board) :-
 % 	pos(Board,X,Y,Element),
 % 	\+number(Element).
 
-check_piece(X, Y, Player, Board) :-
+check_piece(X, Y, Player, Board, E) :-
 	pos(Board,X,Y,E),
 	(Player == red -> 
 		E >= 1, E =< 7;
 		E >= 8, E =< 14).
 
-check_dest(StartX, StartY, EndX, EndY, Player, Board) :-
-	write(StartX),nl,
-	write(StartY),nl,
-	write(EndX),nl,
-	write(EndY),nl.
-	% valid_step(Board, E, StartX, StartY, EndX, EndY).
+check_dest(StartX, StartY, EndX, EndY, Player, Board, E) :-
+	valid_move(Board, E, [StartX, StartY], [EndX, EndY]).
 
 check_boundary(Pos, X, Y, Value) :-
 	atom_length(Pos, Len),
@@ -673,9 +600,9 @@ change_player(Player, NextPlayer) :-
 	select(NextPlayer, Rest_Player, _).
 
 print_player(red) :-
-	write('red').
+	ansi_format([bold,fg(red)], '~w', [red]).
 print_player(black) :-
-	write('black').
+	ansi_format([bold,fg(black)], '~w', [black]).
 
 % main
 main :-
@@ -715,6 +642,7 @@ make_play(Player, Board) :-
 	change_player(Player, NextPlayer),
 	abolish(current/2),
 	assert(current(NextPlayer, NewBoard)),
+	board_print(NewBoard),
 	play.
 
 make_play(Player, Board) :-
