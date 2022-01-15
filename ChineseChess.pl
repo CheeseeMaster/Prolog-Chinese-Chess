@@ -120,6 +120,10 @@ board_print_element(14):-
 	tab(2).
 
 board_print_line_element(Line,Index):-
+	% write('entered board_print_line_element'),nl,
+	% write(Index),nl,
+	% write(Line),nl,
+	% write('......'),nl,
 	arg(Index,Line,E),
 	board_print_element(E).
 
@@ -384,8 +388,8 @@ chess_at(game_board(A,B,C,D,E,F,G,H,I,J), X, Y, Piece) :-
 	% write('entered chess_at A'), nl,
 	Y == 1, 
 	% nth0(X, A, Piece).
-	write(A), nl,
-	write(X), nl,
+	% write(A), nl,
+	% write(X), nl,
 	% match(A, X, Piece),
 	arg(X, A, Piece).
 	% write('left chess_at A'), nl.
@@ -422,15 +426,15 @@ chess_at(game_board(A,B,C,D,E,F,G,H,I,J), X, Y, Piece) :-
 	arg(X, F, Piece).
 
 chess_at(game_board(A,B,C,D,E,F,G,H,I,J), X, Y, Piece) :-
-	write('entered chess_at G'), nl,
-	write(Y), nl,
+	% write('entered chess_at G'), nl,
+	% write(Y), nl,
 	Y == 7, 
 	% nth0(X, A, Piece).
-	write(G), nl,
-	write(X), nl,
+	% write(G), nl,
+	% write(X), nl,
 	% match(G, X, Piece),
-	arg(X, G, Piece),
-	write('left chess_at G'), nl.
+	arg(X, G, Piece).
+	% write('left chess_at G'), nl.
 
 chess_at(game_board(A,B,C,D,E,F,G,H,I,J), X, Y, Piece) :-
 	X == 8, 
@@ -497,7 +501,7 @@ king_alive(black, Board) :-
 	valid_move(Board, X, Y, X1, Y1).
 
 % make move
-move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, [X1|Y1], [X2|Y2]).
+% move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, [X1|Y1], [X2|Y2]).
 
 % king_alive(black, Board).
 % 	% TODO
@@ -508,45 +512,69 @@ move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, [X1|Y1], [X2|Y2]).
 % valid_step(Board, E, StartX, StartY, EndX, EndY)
 % valid_move(Board, A, [StartX|[StartY|_]], [EndX|[EndY|_]])
 % move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, X1, Y1, X2, Y2):-
-move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, [X1|[Y1|_]], [X2|[Y2|_]]):-
-	write('moving1'),nl,
-	% valid_move(Player, game_board(A,B,C,D,E,F,G,H,I,J), [X1|Y1], [X2|Y2]), 
-	% write('...'),nl,
-	% write(X1),nl,
-	% write(Y1),nl,
-	% write(X2),nl,
-	% write(Y2),nl,
-	valid_move(game_board(A,B,C,D,E,F,G,H,I,J), X1, Y1, X2, Y2), 
-	% write('moving11'),nl,
-	functor(NewBoard, game_board, 10),
-	% write('moving12'),nl,
-	% functor(NewLine, l, 9),
-	move_from(game_board(A,B,C,D,E,F,G,H,I,J), X1, Y1, Target, NewBoard),
-	% write('moving13'),nl,
-	move_to(game_board(A,B,C,D,E,F,G,H,I,J), X2, Y2, Target, NewBoard),
-	% arg(Iterator, NewBoard, NewLine),
-	% write('moving4'),nl,
-	% write('moved1'),nl.
 
 replace([_|T], 0, X, [X|T]).
 replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R).
 
-move_from(Board, X1, Y1, Target, NewBoard):-
-	arg(Y1, Board, Line), 
-	arg(X1, Line, Target),
-	replace(X1, Line, 0, NewLine),
-	arg(Y1, NewBoard, NewLine).
+replace_in_line(_,_,_,_, Iterator):- 
+	% write('entered replace_in_line1'),nl,
+	Iterator > 9, !.
 
-move_to(game_board(A,B,C,D,E,F,G,H,I,J), X2, Y2, Target, NewBoard):-
-	write('move_to ....'),nl,
-	write(X2),nl,
-	write(Y2),nl,
-	arg(Y2, NewBoard, Line), 
-	replace(X2, Line, Target, NewLine),
-	arg(Y2, NewBoard, NewLine).
+replace_in_line(Line, X, Element, New_Line, Iterator):-
+	% write('entered replace_in_line2'),nl,
+	Iterator == X, !,
+	arg(X,New_Line,Element),
+	Iterator_Next is Iterator + 1,
+	replace_in_line(Line, X, Element, New_Line, Iterator_Next).
+
+replace_in_line(Line, X, Element, New_Line, Iterator):-
+	% write('entered replace_in_line3'),nl,
+	arg(Iterator,Line,Old),
+	arg(Iterator,New_Line,Old),
+	Iterator_Next is Iterator + 1,
+	replace_in_line(Line, X, Element, New_Line, Iterator_Next).
+
+move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, [X1|[Y1|_]], [X2|[Y2|_]]):-
+	% TODO: check if Player is current player
+	valid_move(game_board(A,B,C,D,E,F,G,H,I,J), X1, Y1, X2, Y2), 
+	functor(NewBoard, game_board, 10),
+	move_from(game_board(A,B,C,D,E,F,G,H,I,J), X1, Y1, Target),
+	move_to(game_board(A,B,C,D,E,F,G,H,I,J), X1, Y1, X2, Y2, Target, NewBoard, 1).
+
+move_from(game_board(A,B,C,D,E,F,G,H,I,J), X1, Y1, Target):-
+	arg(Y1, game_board(A,B,C,D,E,F,G,H,I,J), Line), 
+	arg(X1, Line, Target).
+
+move_to(_,_,_,_,_,_,_,Iterator):- 
+	Iterator > 10, !.
+
+move_to(game_board(A,B,C,D,E,F,G,H,I,J), X1, Y1, X2, Y2, Target, NewBoard, Iterator):-
+	Iterator == Y2, !,
+	arg(Iterator, game_board(A,B,C,D,E,F,G,H,I,J), Line), 
+	functor(NewLine, l, 9),
+	replace_in_line(Line, X2, Target, NewLine, 1),
+	arg(Iterator, NewBoard, NewLine),
+	IteratorNext is Iterator + 1,
+	move_to(game_board(A,B,C,D,E,F,G,H,I,J), X1, Y1, X2, Y2, Target, NewBoard, IteratorNext).
+
+move_to(game_board(A,B,C,D,E,F,G,H,I,J), X1, Y1, X2, Y2, Target, NewBoard, Iterator):-
+	Iterator == Y1, !,
+	arg(Iterator, game_board(A,B,C,D,E,F,G,H,I,J), Line), 
+	functor(NewLine, l, 9),
+	replace_in_line(Line, X2, 0, NewLine, 1),
+	arg(Iterator, NewBoard, NewLine),
+	IteratorNext is Iterator + 1,
+	move_to(game_board(A,B,C,D,E,F,G,H,I,J), X1, Y1, X2, Y2, Target, NewBoard, IteratorNext).
+
+move_to(game_board(A,B,C,D,E,F,G,H,I,J), X1, Y1, X2, Y2, Target, NewBoard, Iterator):-
+	arg(Iterator, game_board(A,B,C,D,E,F,G,H,I,J), Line), 
+	arg(Iterator, NewBoard, Line),
+	IteratorNext is Iterator + 1,
+	move_to(game_board(A,B,C,D,E,F,G,H,I,J), X1, Y1, X2, Y2, Target, NewBoard, IteratorNext).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% [INPUT] %%%%%%%%%%%%%%%%%%%%%%%%%% 
 read_input(Piece, Dest, Player, Board) :-
+	write('entered read_input...'),nl,
     repeat,
         format('~w:~n', ['Enter the piece. e.g. a1.']),
 		catch(read(In_Piece), _, fail),
@@ -562,7 +590,7 @@ read_input(Piece, Dest, Player, Board) :-
 		format('~w:~n', ['Enter the destination. e.g. a1.']),
 		catch(read(In_Dest), _, fail),
 		(   call(check_boundary, In_Dest, EndX, EndY, Dest)
-			->  (	call(check_dest, StartX, StartY, EndX, EndY, Player, Board, E) 
+			->  (	call(check_dest, StartX, StartY, EndX, EndY, Player, Board) 
 					-> true, !
 					;	format('ERROR: ~w~n', ['Invalid walk.']), fail
 				), !
@@ -583,8 +611,11 @@ check_piece(X, Y, Player, Board, E) :-
 		E >= 1, E =< 7;
 		E >= 8, E =< 14).
 
-check_dest(StartX, StartY, EndX, EndY, Player, Board, E) :-
-	valid_move(Board, E, [StartX, StartY], [EndX, EndY]).
+% check_dest(StartX, StartY, EndX, EndY, Player, Board, E) :-
+% 	valid_move(Board, E, StartX, StartY, EndX, EndY).
+
+check_dest(StartX, StartY, EndX, EndY, Player, Board) :-
+	valid_move(Board, StartX, StartY, EndX, EndY).
 
 check_boundary(Pos, X, Y, Value) :-
 	atom_length(Pos, Len),
@@ -616,37 +647,22 @@ main :-
 	play.
 
 play :-
-	write('entered play'),nl,
 	current(Player, Board),
 	board_print(Board),
 	make_play(Player, Board).
 
 make_play(Player, Board) :-
 	write('entered make_play1'),nl,
-	king_alive(Player, Board),
 	write('It\'s '),
 	print_player(Player),
 	write(' turn.\n'),
 	read_input(Piece, Dest, Player, Board),
-	% move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, X1, Y1, X2, Y2)
-	% arg(X1, Line, Target)
-	% write('......'),nl,
-	% write(Piece),nl,
-	% write(Dest),nl,
-	% arg(1, Piece, X1),
-	% arg(2, Piece, Y1),
-	% arg(1, Dest, X2),
-	% arg(2, Dest, Y2),
-	% move(Player, Board, NewBoard, X1, Y1, X2, Y2),
 	move(Player, Board, NewBoard, Piece, Dest),
-	write('moved2'),nl,
 	change_player(Player, NextPlayer),
 	abolish(current/2),
 	assert(current(NextPlayer, NewBoard)),
-	board_print(NewBoard),
 	play.
 
 make_play(Player, Board) :-
-	write('entered make_play2'),nl,
 	print_player(Player),
 	write(' wins the game.\n').
