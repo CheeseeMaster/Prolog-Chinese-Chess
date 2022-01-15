@@ -381,14 +381,14 @@ valid_eat(Board, E, StartX, StartY, EndX, EndY) :-
 %     C is N+1.
 
 chess_at(game_board(A,B,C,D,E,F,G,H,I,J), X, Y, Piece) :-
-	write('entered chess_at A'), nl,
+	% write('entered chess_at A'), nl,
 	Y == 1, 
 	% nth0(X, A, Piece).
 	write(A), nl,
 	write(X), nl,
 	% match(A, X, Piece),
 	arg(X, A, Piece),
-	write('left chess_at A'), nl.
+	% write('left chess_at A'), nl.
 
 chess_at(game_board(A,B,C,D,E,F,G,H,I,J), X, Y, Piece) :-
 	Y == 2, 
@@ -451,36 +451,36 @@ chess_at(game_board(A,B,C,D,E,F,G,H,I,J), X, Y, Piece) :-
 	arg(X, J, Piece).
 
 valid_move(Board, StartX, StartY, EndX, EndY) :- 
-	write('valid_move1 in'),nl,
-	write(StartX),nl,
-	write(StartY),nl,
+	% write('valid_move1 in'),nl,
+	% write(StartX),nl,
+	% write(StartY),nl,
 	chess_at(Board, StartX, StartY, A), 
-	write('valid_move11 in'),nl,
+	% write('valid_move11 in'),nl,
 	valid_step(Board, A, StartX, StartY, EndX, EndY), 
-	write('valid_move12 in'),nl,
+	% write('valid_move12 in'),nl,
 	pos(Board, EndX, EndY, B),
 	pos(Board, StartX, StartY, A),
 	in_black(A), in_red(B),
 	abs(EndX - StartX) + abs(EndY - StartY) > 0,
-	write('valid_move1 out'),nl.
+	% write('valid_move1 out'),nl.
 valid_move(Board, StartX, StartY, EndX, EndY) :- 
-	write('valid_move2 in'),nl,
+	% write('valid_move2 in'),nl,
 	chess_at(Board, StartX, StartY, A),
 	valid_step(Board, A, StartX, StartY, EndX, EndY),
 	pos(Board, EndX, EndY, B),
 	pos(Board, StartX, StartY, A),
 	in_red(A), in_black(B),
 	abs(EndX - StartX) + abs(EndY - StartY) > 0,
-	write('valid_move2 out'),nl.
+	% write('valid_move2 out'),nl.
 valid_move(Board, StartX, StartY, EndX, EndY) :- 
-	write('valid_move3 in'),nl,
+	% write('valid_move3 in'),nl,
 	chess_at(Board, StartX, StartY, A),
 	valid_step(Board, A, StartX, StartY, EndX, EndY),
 	pos(Board, EndX, EndY, B),
 	B = 0,
 	pos(Board, StartX, StartY, A),
 	abs(EndX - StartX) + abs(EndY - StartY) > 0,
-	write('valid_move3 out'),nl.
+	% write('valid_move3 out'),nl.
 
 % chessboard present
 
@@ -488,12 +488,13 @@ valid_move(Board, StartX, StartY, EndX, EndY) :-
 king_alive(red, Board) :-
 	pos(Board, X, Y, 1),
 	pos(Board, X1, Y1, 0),
-	valid_move(Board, 1, [X, Y], [X1, Y1]).
+	% valid_move(Board, 1, [X, Y], [X1, Y1]).
+	valid_move(Board, X, Y, X1, Y1).
 
 king_alive(black, Board) :-
 	pos(Board, X, Y, 8),
 	pos(Board, X1, Y1, 0),
-	valid_move(Board, 8, [X, Y], [X1, Y1]).
+	valid_move(Board, X, Y, X1, Y1).
 
 % make move
 move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, [X1|Y1], [X2|Y2]).
@@ -510,22 +511,22 @@ move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, [X1|Y1], [X2|Y2]).
 move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, [X1|[Y1|_]], [X2|[Y2|_]]):-
 	write('moving1'),nl,
 	% valid_move(Player, game_board(A,B,C,D,E,F,G,H,I,J), [X1|Y1], [X2|Y2]), 
-	write('...'),nl,
-	write(X1),nl,
-	write(Y1),nl,
-	write(X2),nl,
-	write(Y2),nl,
+	% write('...'),nl,
+	% write(X1),nl,
+	% write(Y1),nl,
+	% write(X2),nl,
+	% write(Y2),nl,
 	valid_move(game_board(A,B,C,D,E,F,G,H,I,J), X1, Y1, X2, Y2), 
-	write('moving11'),nl,
+	% write('moving11'),nl,
 	functor(NewBoard, game_board, 10),
-	write('moving12'),nl,
+	% write('moving12'),nl,
 	% functor(NewLine, l, 9),
 	move_from(game_board(A,B,C,D,E,F,G,H,I,J), X1, Y1, Target, NewBoard),
-	write('moving13'),nl,
+	% write('moving13'),nl,
 	move_to(game_board(A,B,C,D,E,F,G,H,I,J), X2, Y2, Target, NewBoard),
 	% arg(Iterator, NewBoard, NewLine),
-	write('moving4'),nl,
-	write('moved1'),nl.
+	% write('moving4'),nl,
+	% write('moved1'),nl.
 
 replace([_|T], 0, X, [X|T]).
 replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R).
