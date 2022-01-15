@@ -443,12 +443,18 @@ valid_move(Board, A, [StartX|[StartY|_]], [EndX|[EndY|_]]) :-
 % chessboard present
 
 % end check
-king_alive(red, Board) :-
-	once(moveLeft(Board, X)),
-	valid_move(Player, game_board(A,B,C,D,E,F,G,H,I,J), [X1|Y1], [X2|Y2]).
+king_alive(Player, Board).
 
-king_alive(black, Board).
-	% TODO
+% 将8 帅1
+% king_alive(red, Board) :-
+% 	locate(Board, 1, X, Y),
+% 	once(valid_step(Board, E, X, Y, X+1, Y)),
+% 	once(valid_step(Board, E, X, Y, X, Y+1)),
+% 	once(valid_step(Board, E, X, Y, X-1, Y)),
+% 	once(valid_step(Board, E, X, Y, X, Y-1)).
+
+% king_alive(black, Board).
+% 	% TODO
 
 % make move
 
@@ -465,19 +471,22 @@ move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, [X1|Y1], [X2|Y2]).
 
 move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, [X1|Y1], [X2|Y2]):-
 	valid_move(Player, game_board(A,B,C,D,E,F,G,H,I,J), [X1|Y1], [X2|Y2]), 
-	move_from(game_board(A,B,C,D,E,F,G,H,I,J), [X1|Y1], Target),
+	functor(NewBoard, game_board, 10),
+	move_from(game_board(A,B,C,D,E,F,G,H,I,J), [X1|Y1], NewBoard, Target),
 	move_to(game_board(A,B,C,D,E,F,G,H,I,J), [X2|Y2], NewBoard, Target).
-
-move_from(Board, [X1|Y1], Target):-
-	arg(X1, Board, Line), 
-	nth0(Y1, Line, Target).
 
 replace([_|T], 0, X, [X|T]).
 replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R), !.
 
+move_from(Board, [X1|Y1], NewBoard, Target):-
+	arg(X1, Board, Line), 
+	nth0(Y1, Line, Target).
+	functor(NewLine,l,9),
+	replace(Y1, Line, Target, NewLine).
+	arg(X1, NewBoard, NewLine).
+
 move_to(game_board(A,B,C,D,E,F,G,H,I,J), [X2|Y2], NewBoard, Target):-
 	arg(X2, Board, Line), 
-	functor(NewBoard, game_board, 10),
 	functor(NewLine,l,9),
 	replace(Y2, Line, Target, NewLine).
 	arg(X2, NewBoard, NewLine).
