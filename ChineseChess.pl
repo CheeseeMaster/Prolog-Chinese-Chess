@@ -286,8 +286,6 @@ valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 	(E mod 7) < 5,
 	abs(StartX - EndX) * abs(StartY - EndY) >= 2,
 	abs(StartX - EndX) * abs(StartY - EndY) < 3,
-	EndX > 0, EndX < 10,
-	EndY > 0, EndY < 11,
 	abs(StartX - EndX) >= 2,
 	abs(StartX - EndX) < 3,
 	A is abs(StartX + EndX) / 2,
@@ -298,8 +296,6 @@ valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 	(E mod 7) < 5,
 	abs(StartX - EndX) * abs(StartY - EndY) >= 2,
 	abs(StartX - EndX) * abs(StartY - EndY) < 3,
-	EndX > 0, EndX < 10,
-	EndY > 0, EndY < 11,
 	abs(StartY - EndY) >= 2,
 	abs(StartY - EndY) < 3,
 	A is abs(StartY + EndY) / 2,
@@ -313,22 +309,16 @@ valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 	abs(StartX - EndX) * abs(StartY - EndY) >= 0,
 	abs(StartX - EndX) * abs(StartY - EndY) < 1,
 	abs(StartX - EndX) + abs(StartY - EndY) > 0,
-	EndX > 0, EndX < 10,
-	EndY > 0, EndY < 11,
 	\+not_reach(Board, StartX, StartY, EndX, EndY).
 
 % 卒
 valid_step(_, E, StartX, StartY, EndX, EndY) :-
 	E = 14,
 	EndX = StartX,
-	EndX > 0, EndX < 10,
-	EndY > 0, EndY < 11,
 	EndY - StartY >= 1,
 	EndY - StartY < 2.
 valid_step(_, E, StartX, StartY, EndX, EndY) :-
 	E = 14,
-	EndX > 0, EndX < 10,
-	EndY > 0, EndY < 11,
 	in_red_field(StartX, StartY),
 	EndY = StartY,
 	abs(EndX - StartX) >= 1,
@@ -338,14 +328,10 @@ valid_step(_, E, StartX, StartY, EndX, EndY) :-
 valid_step(_, E, StartX, StartY, EndX, EndY) :-
 	E = 7,
 	EndX = StartX,
-	EndX > 0, EndX < 10,
-	EndY > 0, EndY < 11,
 	StartY - EndY >= 1,
 	StartY - EndY < 2.
 valid_step(_, E, StartX, StartY, EndX, EndY) :-
 	E = 7,
-	EndX > 0, EndX < 10,
-	EndY > 0, EndY < 11,
 	in_black_field(StartX, StartY),
 	EndY = StartY,
 	abs(EndX - StartX) >= 1,
@@ -362,8 +348,6 @@ valid_walk(Board, E, StartX, StartY, EndX, EndY) :-
 	abs(StartX - EndX) * abs(StartY - EndY) >= 0,
 	abs(StartX - EndX) * abs(StartY - EndY) < 1,
 	abs(StartX - EndX) \= abs(StartY - EndY),
-	EndX > 0, EndX < 10,
-	EndY > 0, EndY < 11,
 	StartX = EndX,
 	\+not_reach(Board, StartX, StartY, EndX, EndY),
 	pos(Board, EndX, EndY, 0).
@@ -373,8 +357,6 @@ valid_walk(Board, E, StartX, StartY, EndX, EndY) :-
 	abs(StartX - EndX) * abs(StartY - EndY) >= 0,
 	abs(StartX - EndX) * abs(StartY - EndY) < 1,
 	abs(StartX - EndX) \= abs(StartY - EndY),
-	EndX > 0, EndX < 10,
-	EndY > 0, EndY < 11,
 	StartY = EndY,
 	\+not_reach(Board, StartX, StartY, EndX, EndY),
 	pos(Board, EndX, EndY, 0).
@@ -522,12 +504,12 @@ make_play(Player, Board) :-
 	write('It\'s '),
 	print_player(Player),
 	write(' turn.\n'),
-	read_input(Piece, Dest, Player, Board).
+	read_input(Piece, Dest, Player, Board),
 	move(Player, Board, NewBoard, Piece, Dest),
 	change_player(Player, NextPlayer),
-	write(NextPlayer),nl,
-	abolish(current/2).
+	abolish(current/2),
 	assert(current(NextPlayer, NewBoard)),
+	board_print(NewBoard),
 	play.
 
 make_play(Player, Board) :-
