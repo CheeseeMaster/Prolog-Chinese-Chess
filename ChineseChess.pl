@@ -219,8 +219,7 @@ check(Board, E, X, Y) :-
 % 将
 valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 	E = 8,
-	abs(StartX - EndX) + abs(StartY - EndY) > 0,
-	abs(StartX - EndX) + abs(StartY - EndY) =< 1,
+	1 is abs(StartX - EndX) + abs(StartY - EndY),
 	in_black_center(EndX, EndY),
 	pos(Board, X, Y, 1),
 	not_meet(Board, X, Y, EndX, EndY),
@@ -229,8 +228,7 @@ valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 % 帅
 valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 	E = 1,
-	abs(StartX - EndX) + abs(StartY - EndY) > 0,
-	abs(StartX - EndX) + abs(StartY - EndY) =< 1,
+	1 is abs(StartX - EndX) + abs(StartY - EndY),
 	in_red_center(EndX, EndY),
 	pos(Board, X, Y, 8),
 	not_meet(Board, EndX, EndY, X, Y),
@@ -239,28 +237,22 @@ valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 % 士
 valid_step(_, E, StartX, StartY, EndX, EndY) :-
 	E = 9,
-	abs(StartX - EndX) >= 1,
-	abs(StartX - EndX) < 2,
-	abs(StartY - EndY) >= 1,
-	abs(StartY - EndY) < 2,
+	1 is abs(StartX - EndX),
+	1 is abs(StartY - EndY),
 	in_black_center(EndX, EndY).
 
 % 仕
 valid_step(_, E, StartX, StartY, EndX, EndY) :-
 	E = 2,
-	abs(StartX - EndX) >= 1,
-	abs(StartX - EndX) < 2,
-	abs(StartY - EndY) >= 1,
-	abs(StartY - EndY) < 2,
+	1 is abs(StartX - EndX),
+	1 is abs(StartY - EndY),
 	in_red_center(EndX, EndY).
 
 % 象
 valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 	E = 10,
-	abs(StartX - EndX) >= 2,
-	abs(StartX - EndX) < 3,
-	abs(StartY - EndY) >= 2,
-	abs(StartY - EndY) < 3,
+	2 is abs(StartX - EndX),
+	2 is abs(StartY - EndY),
 	in_black_field(EndX, EndY),
 	A is abs(StartX + EndX) / 2,
 	B is abs(StartY + EndY) / 2,
@@ -270,10 +262,8 @@ valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 % 相
 valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 	E = 3,
-	abs(StartX - EndX) >= 2,
-	abs(StartX - EndX) < 3,
-	abs(StartY - EndY) >= 2,
-	abs(StartY - EndY) < 3,
+	2 is abs(StartX - EndX),
+	2 is abs(StartY - EndY),
 	in_red_field(EndX, EndY),
 	A is abs(StartX + EndX) / 2,
 	B is abs(StartY + EndY) / 2,
@@ -283,19 +273,15 @@ valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 % 马
 valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 	4 is E mod 7,
-	abs(StartX - EndX) * abs(StartY - EndY) >= 2,
-	abs(StartX - EndX) * abs(StartY - EndY) < 3,
-	abs(StartX - EndX) >= 2,
-	abs(StartX - EndX) < 3,
+	2 is abs(StartX - EndX) * abs(StartY - EndY),
+	2 is abs(StartX - EndX),
 	A is abs(StartX + EndX) / 2,
 	pos(Board, A, StartY, E1),
 	E1 = 0.
 valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 	4 is E mod 7,
-	abs(StartX - EndX) * abs(StartY - EndY) >= 2,
-	abs(StartX - EndX) * abs(StartY - EndY) < 3,
-	abs(StartY - EndY) >= 2,
-	abs(StartY - EndY) < 3,
+	2 is abs(StartX - EndX) * abs(StartY - EndY),
+	2 is abs(StartY - EndY),
 	A is abs(StartY + EndY) / 2,
 	pos(Board, StartX, A, E1),
 	E1 = 0.
@@ -312,27 +298,23 @@ valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 valid_step(_, E, StartX, StartY, EndX, EndY) :-
 	E = 14,
 	EndX = StartX,
-	EndY - StartY >= 1,
-	EndY - StartY < 2.
+	1 is EndY - StartY.
 valid_step(_, E, StartX, StartY, EndX, EndY) :-
 	E = 14,
 	in_red_field(StartX, StartY),
 	EndY = StartY,
-	abs(EndX - StartX) >= 1,
-	abs(EndX - StartX) < 2.
+	1 is abs(EndX - StartX).
 
 % 兵
 valid_step(_, E, StartX, StartY, EndX, EndY) :-
 	E = 7,
 	EndX = StartX,
-	StartY - EndY >= 1,
-	StartY - EndY < 2.
+	1 is StartY - EndY.
 valid_step(_, E, StartX, StartY, EndX, EndY) :-
 	E = 7,
 	in_black_field(StartX, StartY),
 	EndY = StartY,
-	abs(EndX - StartX) >= 1,
-	abs(EndX - StartX) < 2.
+	1 is abs(EndX - StartX).
 
 % 炮
 valid_step(Board, E, StartX, StartY, EndX, EndY) :-
@@ -341,16 +323,14 @@ valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 
 valid_walk(Board, E, StartX, StartY, EndX, EndY) :-
 	6 is E mod 7,
-	abs(StartX - EndX) * abs(StartY - EndY) >= 0,
-	abs(StartX - EndX) * abs(StartY - EndY) < 1,
+	0 is abs(StartX - EndX) * abs(StartY - EndY),
 	abs(StartX - EndX) \= abs(StartY - EndY),
 	StartX = EndX,
 	\+not_reach(Board, StartX, StartY, EndX, EndY),
 	pos(Board, EndX, EndY, 0).
 valid_walk(Board, E, StartX, StartY, EndX, EndY) :-
 	6 is E mod 7,
-	abs(StartX - EndX) * abs(StartY - EndY) >= 0,
-	abs(StartX - EndX) * abs(StartY - EndY) < 1,
+	0 is abs(StartX - EndX) * abs(StartY - EndY),
 	abs(StartX - EndX) \= abs(StartY - EndY),
 	StartY = EndY,
 	\+not_reach(Board, StartX, StartY, EndX, EndY),
@@ -358,8 +338,7 @@ valid_walk(Board, E, StartX, StartY, EndX, EndY) :-
 
 valid_eat(Board, E, StartX, StartY, EndX, EndY) :-
 	6 is E mod 7,
-	abs(StartX - EndX) * abs(StartY - EndY) >= 0,
-	abs(StartX - EndX) * abs(StartY - EndY) < 1,
+	0 is abs(StartX - EndX) * abs(StartY - EndY),
 	abs(StartX - EndX) \= abs(StartY - EndY),
 	pos(Board, EndX, EndY, E1),
 	E1 \= 0,	
