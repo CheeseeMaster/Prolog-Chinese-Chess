@@ -203,6 +203,18 @@ more_one(Board, X1, Y1, X2, Y2) :-
 	(X4 - X2) * (X4 - X1) < 0,
 	X3 \= X4.
 
+% check mate
+check(Board, E, X, Y) :-
+	pos(Board, OtherX, OtherY, E1),
+	E1 \= 1, E1 \= 8,
+	valid_step(Board, E1, OtherX, OtherY, X, Y),
+	in_black(E), in_red(E1).
+check(Board, E, X, Y) :-
+	pos(Board, OtherX, OtherY, E1),
+	E1 \= 1, E1 \= 8,
+	valid_step(Board, E1, OtherX, OtherY, X, Y),
+	in_red(E), in_black(E1).
+
 % move rules
 % 将
 valid_step(Board, E, StartX, StartY, EndX, EndY) :-
@@ -211,7 +223,8 @@ valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 	abs(StartX - EndX) + abs(StartY - EndY) =< 1,
 	in_black_center(EndX, EndY),
 	pos(Board, X, Y, 1),
-	not_meet(Board, X, Y, EndX, EndY).
+	not_meet(Board, X, Y, EndX, EndY),
+	\+check(Board, E, EndX, EndY).
 
 % 帅
 valid_step(Board, E, StartX, StartY, EndX, EndY) :-
@@ -220,7 +233,8 @@ valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 	abs(StartX - EndX) + abs(StartY - EndY) =< 1,
 	in_red_center(EndX, EndY),
 	pos(Board, X, Y, 8),
-	not_meet(Board, EndX, EndY, X, Y).
+	not_meet(Board, EndX, EndY, X, Y),
+	\+check(Board, E, EndX, EndY).
 
 % 士
 valid_step(_, E, StartX, StartY, EndX, EndY) :-
