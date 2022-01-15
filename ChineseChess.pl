@@ -181,9 +181,264 @@ board_print_line_element(Line,Index):-
 
 % locate_line(Line, Chess,):-
 
+% locate
+pos(Board, X, Y, E):-
+	arg(Y,Board,T),
+	arg(X,T,E).
+
+% divide camps
+in_red(X) :- X >= 1, X < 8.
+in_black(X) :- X >= 8, X < 15.
+
+% Check if the piece is in the palace area.
+in_black_center(X, Y) :-
+	X > 3, X < 7,
+	Y > 0, Y < 4.
+in_red_center(X, Y) :-
+	X > 3, X < 7,
+	Y > 7, Y < 11.
+
+% Check if the piece is in the own territory.
+in_black_field(X, Y) :-
+	X > 0, X < 10,
+	Y > 0, Y < 6.
+in_red_field(X, Y) :-
+	X > 0, X < 10,
+	Y > 5, Y < 11.
+
+% Check if two generals doesn't meet.
+not_meet(_, X1, _, X2, _) :-
+	X1 \= X2.
+not_meet(Board, X1, Y1, X2, Y2) :-
+	X1 = X2,
+	pos(Board, X1, Y, E),
+	E \= 0,
+	(Y - Y2) * (Y - Y1) < 0.
+
+% This check whether two places can directly reach.
+not_reach(Board, X1, Y1, X2, Y2) :-
+	X1 = X2,
+	pos(Board, X1, Y, E),
+	E \= 0,
+	(Y - Y2) * (Y - Y1) < 0.
+not_reach(Board, X1, Y1, X2, Y2) :-
+	Y1 = Y2,
+	pos(Board, X, Y1, E),
+	E \= 0,
+	(X - X2) * (X - X1) < 0.
+
+% This check whether two places has only one piece in between.
+more_one(Board, X1, Y1, X2, Y2) :-
+	X1 = X2,
+	pos(Board, X1, Y3, E1),
+	E1 \= 0,
+	(Y3 - Y2) * (Y3 - Y1) < 0,
+	pos(Board, X1, Y4, E2),
+	E2 \= 0,
+	(Y4 - Y2) * (Y4 - Y1) < 0,
+	Y3 \= Y4.
+more_one(Board, X1, Y1, X2, Y2) :-
+	Y1 = Y2,
+	pos(Board, X3, Y1, E1),
+	E1 \= 0,
+	(X3 - X2) * (X3 - X1) < 0,
+	pos(Board, X4, Y1, E2),
+	E2 \= 0,
+	(X4 - X2) * (X4 - X1) < 0,
+	X3 \= X4.
+
 % move rules
-valid_move(Player, game_board(A,B,C,D,E,F,G,H,I,J), [X1|Y1], [X2|Y2]).
-	% TODO
+% 将
+valid_step(Board, E, StartX, StartY, EndX, EndY) :-
+	E = 8,
+	abs(StartX - EndX) + abs(StartY - EndY) > 0,
+	abs(StartX - EndX) + abs(StartY - EndY) =< 1,
+	in_black_center(EndX, EndY),
+	pos(Board, X, Y, 1),
+	not_meet(Board, X, Y, EndX, EndY).
+
+% 帅
+valid_step(Board, E, StartX, StartY, EndX, EndY) :-
+	E = 1,
+	abs(StartX - EndX) + abs(StartY - EndY) > 0,
+	abs(StartX - EndX) + abs(StartY - EndY) =< 1,
+	in_red_center(EndX, EndY),
+	pos(Board, X, Y, 8),
+	not_meet(Board, EndX, EndY, X, Y).
+
+% 士
+valid_step(_, E, StartX, StartY, EndX, EndY) :-
+	E = 9,
+	abs(StartX - EndX) >= 1,
+	abs(StartX - EndX) < 2,
+	abs(StartY - EndY) >= 1,
+	abs(StartY - EndY) < 2,
+	in_black_center(EndX, EndY).
+
+% 仕
+valid_step(_, E, StartX, StartY, EndX, EndY) :-
+	E = 2,
+	abs(StartX - EndX) >= 1,
+	abs(StartX - EndX) < 2,
+	abs(StartY - EndY) >= 1,
+	abs(StartY - EndY) < 2,
+	in_red_center(EndX, EndY).
+
+% 象
+valid_step(Board, E, StartX, StartY, EndX, EndY) :-
+	E = 10,
+	abs(StartX - EndX) >= 2,
+	abs(StartX - EndX) < 3,
+	abs(StartY - EndY) >= 2,
+	abs(StartY - EndY) < 3,
+	in_black_field(EndX, EndY),
+	A is abs(StartX + EndX) / 2,
+	B is abs(StartY + EndY) / 2,
+	pos(Board, A, B, E1),
+	E1 = 0.
+
+% 相
+valid_step(Board, E, StartX, StartY, EndX, EndY) :-
+	E = 3,
+	abs(StartX - EndX) >= 2,
+	abs(StartX - EndX) < 3,
+	abs(StartY - EndY) >= 2,
+	abs(StartY - EndY) < 3,
+	in_red_field(EndX, EndY),
+	A is abs(StartX + EndX) / 2,
+	B is abs(StartY + EndY) / 2,
+	pos(Board, A, B, E1),
+	E1 = 0.
+
+% 马
+valid_step(Board, E, StartX, StartY, EndX, EndY) :-
+	(E mod 7) >= 4,
+	(E mod 7) < 5,
+	abs(StartX - EndX) * abs(StartY - EndY) >= 2,
+	abs(StartX - EndX) * abs(StartY - EndY) < 3,
+	EndX > 0, EndX < 10,
+	EndY > 0, EndY < 11,
+	abs(StartX - EndX) >= 2,
+	abs(StartX - EndX) < 3,
+	A is abs(StartX + EndX) / 2,
+	pos(Board, A, StartY, E1),
+	E1 = 0.
+valid_step(Board, E, StartX, StartY, EndX, EndY) :-
+	(E mod 7) >= 4,
+	(E mod 7) < 5,
+	abs(StartX - EndX) * abs(StartY - EndY) >= 2,
+	abs(StartX - EndX) * abs(StartY - EndY) < 3,
+	EndX > 0, EndX < 10,
+	EndY > 0, EndY < 11,
+	abs(StartY - EndY) >= 2,
+	abs(StartY - EndY) < 3,
+	A is abs(StartY + EndY) / 2,
+	pos(Board, StartX, A, E1),
+	E1 = 0.
+
+% 车
+valid_step(Board, E, StartX, StartY, EndX, EndY) :-
+	(E mod 7) >= 5,
+	(E mod 7) < 6,
+	abs(StartX - EndX) * abs(StartY - EndY) >= 0,
+	abs(StartX - EndX) * abs(StartY - EndY) < 1,
+	abs(StartX - EndX) + abs(StartY - EndY) > 0,
+	EndX > 0, EndX < 10,
+	EndY > 0, EndY < 11,
+	\+not_reach(Board, StartX, StartY, EndX, EndY).
+
+% 卒
+valid_step(_, E, StartX, StartY, EndX, EndY) :-
+	E = 14,
+	EndX = StartX,
+	EndX > 0, EndX < 10,
+	EndY > 0, EndY < 11,
+	EndY - StartY >= 1,
+	EndY - StartY < 2.
+valid_step(_, E, StartX, StartY, EndX, EndY) :-
+	E = 14,
+	EndX > 0, EndX < 10,
+	EndY > 0, EndY < 11,
+	in_red_field(StartX, StartY),
+	EndY = StartY,
+	abs(EndX - StartX) >= 1,
+	abs(EndX - StartX) < 2.
+
+% 兵
+valid_step(_, E, StartX, StartY, EndX, EndY) :-
+	E = 7,
+	EndX = StartX,
+	EndX > 0, EndX < 10,
+	EndY > 0, EndY < 11,
+	StartY - EndY >= 1,
+	StartY - EndY < 2.
+valid_step(_, E, StartX, StartY, EndX, EndY) :-
+	E = 7,
+	EndX > 0, EndX < 10,
+	EndY > 0, EndY < 11,
+	in_black_field(StartX, StartY),
+	EndY = StartY,
+	abs(EndX - StartX) >= 1,
+	abs(EndX - StartX) < 2.
+
+% 炮
+valid_step(Board, E, StartX, StartY, EndX, EndY) :-
+	valid_walk(Board, E, StartX, StartY, EndX, EndY);
+	valid_eat(Board, E, StartX, StartY, EndX, EndY).
+
+valid_walk(Board, E, StartX, StartY, EndX, EndY) :-
+	(E mod 7) >= 6,
+	(E mod 7) < 7,
+	abs(StartX - EndX) * abs(StartY - EndY) >= 0,
+	abs(StartX - EndX) * abs(StartY - EndY) < 1,
+	abs(StartX - EndX) \= abs(StartY - EndY),
+	EndX > 0, EndX < 10,
+	EndY > 0, EndY < 11,
+	StartX = EndX,
+	\+not_reach(Board, StartX, StartY, EndX, EndY),
+	pos(Board, EndX, EndY, 0).
+valid_walk(Board, E, StartX, StartY, EndX, EndY) :-
+	(E mod 7) >= 6,
+	(E mod 7) < 7,
+	abs(StartX - EndX) * abs(StartY - EndY) >= 0,
+	abs(StartX - EndX) * abs(StartY - EndY) < 1,
+	abs(StartX - EndX) \= abs(StartY - EndY),
+	EndX > 0, EndX < 10,
+	EndY > 0, EndY < 11,
+	StartY = EndY,
+	\+not_reach(Board, StartX, StartY, EndX, EndY),
+	pos(Board, EndX, EndY, 0).
+
+valid_eat(Board, E, StartX, StartY, EndX, EndY) :-
+	(E mod 7) >= 6,
+	(E mod 7) < 7,
+	abs(StartX - EndX) * abs(StartY - EndY) >= 0,
+	abs(StartX - EndX) * abs(StartY - EndY) < 1,
+	abs(StartX - EndX) \= abs(StartY - EndY),
+	pos(Board, EndX, EndY, E1),
+	E1 \= 0,	
+	not_reach(Board, StartX, StartY, EndX, EndY),
+	\+more_one(Board, StartX, StartY, EndX, EndY).
+
+% general check (piece at start place; must move; cannot attack its own camp)
+valid_move(Board, A, [StartX|[StartY|_]], [EndX|[EndY|_]]) :- 
+	valid_step(Board, A, StartX, StartY, EndX, EndY),
+	pos(Board, EndX, EndY, B),
+	pos(Board, StartX, StartY, A),
+	in_black(A), in_red(B),
+	abs(EndX - StartX) + abs(EndY - StartY) > 0.
+valid_move(Board, A, [StartX|[StartY|_]], [EndX|[EndY|_]]) :- 
+	valid_step(Board, A, StartX, StartY, EndX, EndY),
+	pos(Board, EndX, EndY, B),
+	pos(Board, StartX, StartY, A),
+	in_red(A), in_black(B),
+	abs(EndX - StartX) + abs(EndY - StartY) > 0.
+valid_move(Board, A, [StartX|[StartY|_]], [EndX|[EndY|_]]) :- 
+	valid_step(Board, A, StartX, StartY, EndX, EndY),
+	pos(Board, EndX, EndY, B),
+	B = 0,
+	pos(Board, StartX, StartY, A),
+	abs(EndX - StartX) + abs(EndY - StartY) > 0.
 
 % chessboard present
 
