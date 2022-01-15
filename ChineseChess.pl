@@ -282,8 +282,7 @@ valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 
 % 马
 valid_step(Board, E, StartX, StartY, EndX, EndY) :-
-	(E mod 7) >= 4,
-	(E mod 7) < 5,
+	4 is E mod 7,
 	abs(StartX - EndX) * abs(StartY - EndY) >= 2,
 	abs(StartX - EndX) * abs(StartY - EndY) < 3,
 	abs(StartX - EndX) >= 2,
@@ -292,8 +291,7 @@ valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 	pos(Board, A, StartY, E1),
 	E1 = 0.
 valid_step(Board, E, StartX, StartY, EndX, EndY) :-
-	(E mod 7) >= 4,
-	(E mod 7) < 5,
+	4 is E mod 7,
 	abs(StartX - EndX) * abs(StartY - EndY) >= 2,
 	abs(StartX - EndX) * abs(StartY - EndY) < 3,
 	abs(StartY - EndY) >= 2,
@@ -304,8 +302,7 @@ valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 
 % 车
 valid_step(Board, E, StartX, StartY, EndX, EndY) :-
-	(E mod 7) >= 5,
-	(E mod 7) < 6,
+	5 is E mod 7,
 	abs(StartX - EndX) * abs(StartY - EndY) >= 0,
 	abs(StartX - EndX) * abs(StartY - EndY) < 1,
 	abs(StartX - EndX) + abs(StartY - EndY) > 0,
@@ -343,8 +340,7 @@ valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 	valid_eat(Board, E, StartX, StartY, EndX, EndY).
 
 valid_walk(Board, E, StartX, StartY, EndX, EndY) :-
-	(E mod 7) >= 6,
-	(E mod 7) < 7,
+	6 is E mod 7,
 	abs(StartX - EndX) * abs(StartY - EndY) >= 0,
 	abs(StartX - EndX) * abs(StartY - EndY) < 1,
 	abs(StartX - EndX) \= abs(StartY - EndY),
@@ -352,8 +348,7 @@ valid_walk(Board, E, StartX, StartY, EndX, EndY) :-
 	\+not_reach(Board, StartX, StartY, EndX, EndY),
 	pos(Board, EndX, EndY, 0).
 valid_walk(Board, E, StartX, StartY, EndX, EndY) :-
-	(E mod 7) >= 6,
-	(E mod 7) < 7,
+	6 is E mod 7,
 	abs(StartX - EndX) * abs(StartY - EndY) >= 0,
 	abs(StartX - EndX) * abs(StartY - EndY) < 1,
 	abs(StartX - EndX) \= abs(StartY - EndY),
@@ -362,8 +357,7 @@ valid_walk(Board, E, StartX, StartY, EndX, EndY) :-
 	pos(Board, EndX, EndY, 0).
 
 valid_eat(Board, E, StartX, StartY, EndX, EndY) :-
-	(E mod 7) >= 6,
-	(E mod 7) < 7,
+	6 is E mod 7,
 	abs(StartX - EndX) * abs(StartY - EndY) >= 0,
 	abs(StartX - EndX) * abs(StartY - EndY) < 1,
 	abs(StartX - EndX) \= abs(StartY - EndY),
