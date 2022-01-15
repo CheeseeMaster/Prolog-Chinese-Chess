@@ -240,8 +240,8 @@ valid_step(Board, E, StartX, StartY, EndX, EndY) :-
 	in_red_center(EndX, EndY),
 	pos(Board, X, Y, 8),
 	not_meet(Board, EndX, EndY, X, Y),
-	move_to(Board, X1, Y1, X2, Y2, E, NewBoard, 1),
-	\+check(NewBoard, E, EndX, EndY).
+	% move_to(Board, X1, Y1, X2, Y2, E, NewBoard, 1),
+	\+check(Board, E, EndX, EndY).
 
 % 士
 valid_step(_, E, StartX, StartY, EndX, EndY) :-
