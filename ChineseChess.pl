@@ -418,25 +418,20 @@ valid_move(Board, StartX, StartY, EndX, EndY) :-
 	abs(EndX - StartX) + abs(EndY - StartY) > 0.
 
 valid_move(Board, StartX, StartY, EndX, EndY) :- 
-	% write('valid_move2 in'),nl,
 	chess_at(Board, StartX, StartY, A),
 	valid_step(Board, A, StartX, StartY, EndX, EndY),
 	pos(Board, EndX, EndY, B),
 	pos(Board, StartX, StartY, A),
 	in_red(A), in_black(B),
 	abs(EndX - StartX) + abs(EndY - StartY) > 0.
-	% write('valid_move2 out'),nl.
+
 valid_move(Board, StartX, StartY, EndX, EndY) :- 
-	% write('valid_move3 in'),nl,
 	chess_at(Board, StartX, StartY, A),
 	valid_step(Board, A, StartX, StartY, EndX, EndY),
 	pos(Board, EndX, EndY, B),
 	B = 0,
 	pos(Board, StartX, StartY, A),
 	abs(EndX - StartX) + abs(EndY - StartY) > 0.
-	% write('valid_move3 out'),nl.
-
-% chessboard present
 
 % end check
 king_alive(red, Board) :-
@@ -449,22 +444,6 @@ king_alive(black, Board) :-
 	pos(Board, X, Y, 8),
 	pos(Board, X1, Y1, 0),
 	valid_move(Board, X, Y, X1, Y1).
-
-% make move
-% move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, [X1|Y1], [X2|Y2]).
-
-% king_alive(black, Board).
-% 	% TODO
-
-% make move
-% move(_, _, _, _, _).
-
-% valid_step(Board, E, StartX, StartY, EndX, EndY)
-% valid_move(Board, A, [StartX|[StartY|_]], [EndX|[EndY|_]])
-% move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, X1, Y1, X2, Y2):-
-
-replace([_|T], 0, X, [X|T]).
-replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R).
 
 replace_in_line(_,_,_,_, Iterator):- 
 	Iterator > 9, !.
