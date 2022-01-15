@@ -451,16 +451,6 @@ king_alive(black, Board).
 	% TODO
 
 % make move
-
-change_player(Player, NextPlayer) :-
-	select(Player, [red, black], Rest_Player),
-	select(NextPlayer, Rest_Player, _).
-
-print_player(red) :-
-	write('red').
-print_player(black) :-
-	write('black').
-
 move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, [X1|Y1], [X2|Y2]).
 
 move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, [X1|Y1], [X2|Y2]):-
@@ -482,29 +472,88 @@ move_to(game_board(A,B,C,D,E,F,G,H,I,J), [X2|Y2], NewBoard, Target):-
 	replace(Y2, Line, Target, NewLine).
 	arg(X2, NewBoard, NewLine).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%% [INPUT] %%%%%%%%%%%%%%%%%%%%%%%%%% 
+read_input(Piece, Dest, Player, Board) :-
+    repeat,
+        format('~w:~n', ['Enter the piece. e.g. a1.']),
+		catch(read(In_Piece), _, fail),
+        (   call(check_boundary, In_Piece, StartX, StartY, Piece)
+        	->  (	call(check_piece, StartX, StartY, Player, Board) 
+					-> true, !
+					;	format('ERROR: ~w~n', ['Invalid piece: empty or enemy.']), fail
+				), !
+			;   format('ERROR: ~w~n', ['Invalid piece. should be [a-j],[1-9].']),fail),
+	repeat,
+		format('~w:~n', ['Enter the dest. e.g. a1.']),
+		catch(read(In_Dest), _, fail),
+		(   call(check_boundary, In_Dest, EndX, EndY, Dest)
+			->  (	call(check_dest, StartX, StartY, EndX, EndY, Player, Board) 
+					-> true, !
+					;	format('ERROR: ~w~n', ['Invalid dest: empty or enemy.']), fail
+				), !
+			;   format('ERROR: ~w~n', ['Invalid dest. should be [a-j],[1-9].']),fail).
+
+pos(Board, X, Y, E) :-
+	arg(Y,Board,T),
+	arg(X,T,E).
+
+is_occupied(Board,X,Y) :-
+	pos(Board,X,Y,Element),
+	\+number(Element).
+
+check_piece(X, Y, Player, Board) :-
+	pos(Board,X,Y,E),
+	(Player == red -> 
+		E >= 1, E =< 7;
+		E >= 8, E =< 14).
+
+check_dest(StartX, StartY, EndX, EndY, Player, Board) :-
+	write(StartX),nl,
+	write(StartY),nl,
+	write(EndX),nl,
+	write(EndY),nl.
+	% valid_step(Board, E, StartX, StartY, EndX, EndY).
+
+check_boundary(Pos, X, Y, Value) :-
+	atom_length(Pos, Len),
+	Len == 2,
+	atom_codes(Pos, [F, S| Tail]),
+	F >= 97, F =< 106,
+	S >= 49, S =< 57,
+	Y is F - 96,
+	X is S - 48,
+	append([X],[Y], Value).
+
+change_player(Player, NextPlayer) :-
+	select(Player, [red, black], Rest_Player),
+	select(NextPlayer, Rest_Player, _).
+
+print_player(red) :-
+	write('red').
+print_player(black) :-
+	write('black').
+
 % main
 main :-
 	abolish(current/2),
 	chessboard_init(Board),
 	assert(current(red, Board)),
 	write('Prolog Chinese Chess\n'),
-	write('First goes the red.\n'),
+	write('First goes the '),
+	ansi_format([bold,fg(red)], '~w\n', [red]),nl,
 	play.
 
 play :-
-	% current(Player, Board),
+	current(Player, Board),
 	board_print(Board),
 	make_play(Player, Board).
 
 make_play(Player, Board) :-
-	king_alive(Player, Board),
+	% king_alive(Player, Board),
 	write('It\'s '),
 	print_player(Player),
 	write(' turn.\n'),
-	write('Please choose the piece.\n'),
-	repeat, read(Piece),
-	write('Please choose the destination.\n'),
-	read(Dest),
+	read_input(Piece, Dest, Player, Board),
 	move(Player, Board, NewBoard, Piece, Dest),
 	change_player(Player, NextPlayer),
 	abolish(current/2),
