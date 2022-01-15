@@ -493,13 +493,13 @@ read_input(Piece, Dest, Player, Board) :-
 				), !
 			;   format('ERROR: ~w~n', ['Invalid dest. should be [a-j],[1-9].']),fail).
 
-pos(Board, X, Y, E) :-
-	arg(Y,Board,T),
-	arg(X,T,E).
+% pos(Board, X, Y, E) :-
+% 	arg(Y,Board,T),
+% 	arg(X,T,E).
 
-is_occupied(Board,X,Y) :-
-	pos(Board,X,Y,Element),
-	\+number(Element).
+% is_occupied(Board,X,Y) :-
+% 	pos(Board,X,Y,Element),
+% 	\+number(Element).
 
 check_piece(X, Y, Player, Board) :-
 	pos(Board,X,Y,E),
