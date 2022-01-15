@@ -390,11 +390,14 @@ valid_move(Board, A, [StartX|[StartY|_]], [EndX|[EndY|_]]) :-
 
 % end check
 king_alive(red, Board) :-
-	once(moveLeft(Board, X)),
-	valid_move(Player, game_board(A,B,C,D,E,F,G,H,I,J), [X1|Y1], [X2|Y2]).
+	pos(Board, X, Y, 1),
+	pos(Board, X1, Y1, 0),
+	valid_move(Board, 1, [X, Y], [X1, Y1]).
 
-king_alive(black, Board).
-	% TODO
+king_alive(black, Board) :-
+	pos(Board, X, Y, 8),
+	pos(Board, X1, Y1, 0),
+	valid_move(Board, 8, [X, Y], [X1, Y1]).
 
 % make move
 move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, [X1|Y1], [X2|Y2]).
