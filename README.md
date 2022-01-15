@@ -2,7 +2,7 @@
 
 A Chinese chess game written in Prolog.
 
-(For details please visit [Chinese Chess](https://en.wikipedia.org/wiki/Xiangqi#Middlegame_strategy/).
+(For details please visit [Chinese Chess](https://en.wikipedia.org/wiki/Xiangqi#Middlegame_strategy/).)
 
 ## How we built it
 
