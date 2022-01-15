@@ -437,19 +437,19 @@ chess_at(game_board(A,B,C,D,E,F,G,H,I,J), X, Y, Piece) :-
 	% write('left chess_at G'), nl.
 
 chess_at(game_board(A,B,C,D,E,F,G,H,I,J), X, Y, Piece) :-
-	X == 8, 
+	Y == 8, 
 	% nth0(Y1, H, Piece).
 	% match(H, X, Piece).
 	arg(X, H, Piece).
 
 chess_at(game_board(A,B,C,D,E,F,G,H,I,J), X, Y, Piece) :-
-	X == 9, 
+	Y == 9, 
 	% nth0(Y1, I, Piece).
 	% match(I, X, Piece).
 	arg(X, I, Piece).
 
 chess_at(game_board(A,B,C,D,E,F,G,H,I,J), X, Y, Piece) :-
-	X == 10, 
+	Y == 10, 
 	% nth0(Y1, J, Piece).
 	% match(J, X, Piece).
 	arg(X, J, Piece).
@@ -467,6 +467,7 @@ valid_move(Board, StartX, StartY, EndX, EndY) :-
 	in_black(A), in_red(B),
 	abs(EndX - StartX) + abs(EndY - StartY) > 0.
 	% write('valid_move1 out'),nl.
+
 valid_move(Board, StartX, StartY, EndX, EndY) :- 
 	% write('valid_move2 in'),nl,
 	chess_at(Board, StartX, StartY, A),
@@ -574,7 +575,7 @@ move_to(game_board(A,B,C,D,E,F,G,H,I,J), X1, Y1, X2, Y2, Target, NewBoard, Itera
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% [INPUT] %%%%%%%%%%%%%%%%%%%%%%%%%% 
 read_input(Piece, Dest, Player, Board) :-
-	write('entered read_input...'),nl,
+	% write('entered read_input...'),nl,
     repeat,
         format('~w:~n', ['Enter the piece. e.g. a1.']),
 		catch(read(In_Piece), _, fail),
@@ -653,7 +654,7 @@ play :-
 
 make_play(Player, Board) :-
 	% king_alive(Player, Board),
-	write('entered make_play1'),nl,
+	% write('entered make_play1'),nl,
 	write('It\'s '),
 	print_player(Player),
 	write(' turn.\n'),
