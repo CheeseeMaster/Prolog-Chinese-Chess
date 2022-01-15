@@ -717,7 +717,7 @@ play :-
 	make_play(Player, Board).
 
 make_play(Player, Board) :-
-	% king_alive(Player, Board),
+	king_alive(Player, Board),
 	% write('entered make_play1'),nl,
 	write('It\'s '),
 	print_player(Player),
@@ -730,5 +730,6 @@ make_play(Player, Board) :-
 	play.
 
 make_play(Player, Board) :-
-	print_player(Player),
+	change_player(Player, NextPlayer),
+	print_player(NextPlayer),
 	write(' wins the game.\n').
