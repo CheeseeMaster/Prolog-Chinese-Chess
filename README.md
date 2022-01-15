@@ -1,1 +1,1 @@
-# UTD-HackReason-2022
+# Prolog Chinese Chess
