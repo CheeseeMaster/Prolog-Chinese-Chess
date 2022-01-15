@@ -584,7 +584,7 @@ replace_in_line(Line, X1, X, E1, E2, New_Line, Iterator):-
 	Iterator_Next is Iterator + 1,
 	replace_in_line(Line, X1, X, E1, E2, New_Line, Iterator_Next).
 
-move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, [X1|[Y1|_]], [X2|[Y2|_]]):-
+move(_, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, [X1|[Y1|_]], [X2|[Y2|_]]):-
 	valid_move(game_board(A,B,C,D,E,F,G,H,I,J), X1, Y1, X2, Y2), 
 	functor(NewBoard, game_board, 10),
 	move_from(game_board(A,B,C,D,E,F,G,H,I,J), X1, Y1, Target),
@@ -679,13 +679,13 @@ check_piece(X, Y, Player, Board, E) :-
 % check_dest(StartX, StartY, EndX, EndY, Player, Board, E) :-
 % 	valid_move(Board, E, StartX, StartY, EndX, EndY).
 
-check_dest(StartX, StartY, EndX, EndY, Player, Board) :-
+check_dest(StartX, StartY, EndX, EndY, _, Board) :-
 	valid_move(Board, StartX, StartY, EndX, EndY).
 
 check_boundary(Pos, X, Y, Value) :-
 	atom_length(Pos, Len),
 	Len == 2,
-	atom_codes(Pos, [F, S| Tail]),
+	atom_codes(Pos, [F, S| _]),
 	F >= 97, F =< 106,
 	S >= 49, S =< 57,
 	Y is F - 96,
@@ -729,7 +729,7 @@ make_play(Player, Board) :-
 	assert(current(NextPlayer, NewBoard)),
 	play.
 
-make_play(Player, Board) :-
+make_play(Player, _) :-
 	change_player(Player, NextPlayer),
 	print_player(NextPlayer),
 	write(' wins the game.\n').
