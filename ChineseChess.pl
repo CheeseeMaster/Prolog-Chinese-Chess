@@ -185,26 +185,6 @@ board_print_line_element(Line,Index):-
 valid_move(Player, game_board(A,B,C,D,E,F,G,H,I,J), [X1|Y1], [X2|Y2]).
 	% TODO
 
-move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, [X1|Y1], [X2|Y2]).
-
-move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, [X1|Y1], [X2|Y2]):-
-	valid_move(Player, game_board(A,B,C,D,E,F,G,H,I,J), [X1|Y1], [X2|Y2]), 
-	move_from(game_board(A,B,C,D,E,F,G,H,I,J), [X1|Y1], Target),
-	move_to(game_board(A,B,C,D,E,F,G,H,I,J), [X2|Y2], NewBoard, Target).
-
-move_from(Board, [X1|Y1], Target):-
-	arg(X1, Board, Line), 
-	nth0(Y1, Line, Target).
-
-replace([_|T], 0, X, [X|T]).
-replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R), !.
-
-move_to(game_board(A,B,C,D,E,F,G,H,I,J), [X2|Y2], NewBoard, Target):-
-	arg(X2, Board, Line), 
-	functor(NewBoard, game_board, 10),
-	replace(Y2, Line, Target, NewLine).
-	arg(X2, NewBoard, NewLine)
-
 % chessboard present
 
 % end check
@@ -225,6 +205,27 @@ print_player(red) :-
 	write('red').
 print_player(black) :-
 	write('black').
+
+move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, [X1|Y1], [X2|Y2]).
+
+move(Player, game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, [X1|Y1], [X2|Y2]):-
+	valid_move(Player, game_board(A,B,C,D,E,F,G,H,I,J), [X1|Y1], [X2|Y2]), 
+	move_from(game_board(A,B,C,D,E,F,G,H,I,J), [X1|Y1], Target),
+	move_to(game_board(A,B,C,D,E,F,G,H,I,J), [X2|Y2], NewBoard, Target).
+
+move_from(Board, [X1|Y1], Target):-
+	arg(X1, Board, Line), 
+	nth0(Y1, Line, Target).
+
+replace([_|T], 0, X, [X|T]).
+replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R), !.
+
+move_to(game_board(A,B,C,D,E,F,G,H,I,J), [X2|Y2], NewBoard, Target):-
+	arg(X2, Board, Line), 
+	functor(NewBoard, game_board, 10),
+	functor(NewLine,l,9),
+	replace(Y2, Line, Target, NewLine).
+	arg(X2, NewBoard, NewLine).
 
 % main
 main :-
