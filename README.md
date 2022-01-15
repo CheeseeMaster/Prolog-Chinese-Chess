@@ -8,7 +8,7 @@ The game is played on the console  built by Prolog
 
 ## Run & Play
 
-.  Load the code into your Prolog interpreter, e.g, [SWI Prolog](http://www.swi-prolog.org/) or [Yap](https://www.dcc.fc.up.pt/~vsc/Yap/) and run **main.** 
+.  Load the code into your Prolog interpreter, e.g, [SWI Prolog](http://www.swi-prolog.org/) or [Online IDE](https://swish.swi-prolog.org/) and run **main.** 
 
 ```
 swipl ChineseChess.pl
