@@ -459,7 +459,7 @@ read_input(Piece, Dest, Player, Board) :-
 		format('~w:~n', ['Enter the destination. e.g. a1.']),
 		catch(read(In_Dest), _, fail),
 		(   call(check_boundary, In_Dest, EndX, EndY, Dest)
-			->  (	call(check_dest, StartX, StartY, EndX, EndY, Player, Board) 
+			->  (	call(check_dest, StartX, StartY, EndX, EndY, Player, Board, E) 
 					-> true, !
 					;	format('ERROR: ~w~n', ['Invalid walk.']), fail
 				), !
@@ -480,12 +480,7 @@ check_piece(X, Y, Player, Board, E) :-
 		E >= 1, E =< 7;
 		E >= 8, E =< 14).
 
-check_dest(StartX, StartY, EndX, EndY, Player, Board) :-
-	% write(StartX),nl,
-	% write(StartY),nl,
-	% write(EndX),nl,
-	% write(EndY),nl.
-	pos(Board,EndX,EndY,E),
+check_dest(StartX, StartY, EndX, EndY, Player, Board, E) :-
 	valid_step(Board, E, StartX, StartY, EndX, EndY).
 
 check_boundary(Pos, X, Y, Value) :-
@@ -532,9 +527,9 @@ make_play(Player, Board) :-
 	change_player(Player, NextPlayer),
 	write(NextPlayer),nl,
 	abolish(current/2).
-% 	assert(current(NextPlayer, NewBoard)),
-% 	play.
+	assert(current(NextPlayer, NewBoard)),
+	play.
 
-% make_play(Player, Board) :-
-% 	print_player(Player),
-% 	write(' wins the game.\n').
+make_play(Player, Board) :-
+	print_player(Player),
+	write(' wins the game.\n').
