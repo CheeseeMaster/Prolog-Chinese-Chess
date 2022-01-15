@@ -75,98 +75,54 @@ board_print_line(Line):-
     board_print_line_element(Line,9),
 	nl.
 
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 0, !, 	% just a white space
-	tab(4).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 1, !,
+board_print_element(0):- tab(4).
+board_print_element(1):- 
 	ansi_format([bold,fg(red)], '~c', [24101]),	% 帅 
-	% format('~c',[24101]), 	% 帅 
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 2, !,
+board_print_element(2):- 
 	ansi_format([bold,fg(red)], '~c', [20181]),	% 仕 
-	% format('~c',[20181]), 	% 仕
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 3, !,
+board_print_element(3):- 
 	ansi_format([bold,fg(red)], '~c', [30456]),	% 相 
-	% format('~c',[30456]),    % 相
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 4, !,
+board_print_element(4):- 
 	ansi_format([bold,fg(red)], '~c', [39340]),	% 马 
-	% format('~c',[39340]),    % 马
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 5, !,
+board_print_element(5):- 
 	ansi_format([bold,fg(red)], '~c', [36554]),	% 车 
-	% format('~c',[36554]),	% 车
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 6, !,
+board_print_element(6):-
 	ansi_format([bold,fg(red)], '~c', [28846]),	% 炮 
-	% format('~c',[28846]),	% 炮
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 7, !,
+board_print_element(7):- 
 	ansi_format([bold,fg(red)], '~c', [20853]),	% 兵 
-	% format('~c',[20853]),	% 兵
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 8, !,
+board_print_element(8):- 
 	ansi_format([bold,fg(black)], '~c', [23559]),	% 将 
-	% format('~c',[23559]),	% 将
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 9, !,
+board_print_element(9):- 
 	ansi_format([bold,fg(black)], '~c', [22763]),	% 士 
-	% format('~c',[24101]),	% 士
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 10, !,
+board_print_element(10):- 
 	ansi_format([bold,fg(black)], '~c', [35937]),	% 象 
-	% format('~c',[35937]),	% 象
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 11, !,
+board_print_element(11):- 
 	ansi_format([bold,fg(black)], '~c', [39532]),	% 马 
-	% format('~c',[39532]),	% 马
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 12, !,
+board_print_element(12):- 
 	ansi_format([bold,fg(black)], '~c', [36710]),	% 车 
-	% format('~c',[36710]),	% 车
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 13, !,
+board_print_element(13):- 
 	ansi_format([bold,fg(black)], '~c', [30770]),	% 砲 
-	% format('~c',[30770]),	% 砲
 	tab(2).
-board_print_line_element(Line,Index):-
-	arg(Index,Line,E),
-	E == 14, !,
+board_print_element(14):- 
 	ansi_format([bold,fg(black)], '~c', [21330]),	% 卒
-	% format('~c',[21330]),	% 卒
 	tab(2).
+
 board_print_line_element(Line,Index):-
 	arg(Index,Line,E),
-	print(E),		    % shouldn't reach this state
-	tab(2).
+	board_print_element(E).
+
 
 % % helper predicate
 % indexOf([Element|_], Element, 0).
@@ -478,13 +434,15 @@ read_input(Piece, Dest, Player, Board) :-
         format('~w:~n', ['Enter the piece. e.g. a1.']),
 		catch(read(In_Piece), _, fail),
         (   call(check_boundary, In_Piece, StartX, StartY, Piece)
-        	->  (	call(check_piece, StartX, StartY, Player, Board) 
+        	->  (	call(check_piece, StartX, StartY, Player, Board, E) 
 					-> true, !
 					;	format('ERROR: ~w~n', ['Invalid piece: empty or enemy.']), fail
 				), !
 			;   format('ERROR: ~w~n', ['Invalid piece. should be [a-j],[1-9].']),fail),
+		board_print_element(E),
+		format('is ok.~n'),
 	repeat,
-		format('~w:~n', ['Enter the dest. e.g. a1.']),
+		format('~w:~n', ['Enter the destination. e.g. a1.']),
 		catch(read(In_Dest), _, fail),
 		(   call(check_boundary, In_Dest, EndX, EndY, Dest)
 			->  (	call(check_dest, StartX, StartY, EndX, EndY, Player, Board) 
@@ -501,7 +459,7 @@ read_input(Piece, Dest, Player, Board) :-
 % 	pos(Board,X,Y,Element),
 % 	\+number(Element).
 
-check_piece(X, Y, Player, Board) :-
+check_piece(X, Y, Player, Board, E) :-
 	pos(Board,X,Y,E),
 	(Player == red -> 
 		E >= 1, E =< 7;
