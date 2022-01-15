@@ -481,7 +481,7 @@ check_piece(X, Y, Player, Board, E) :-
 		E >= 8, E =< 14).
 
 check_dest(StartX, StartY, EndX, EndY, Player, Board, E) :-
-	valid_step(Board, E, StartX, StartY, EndX, EndY).
+	valid_move(Board, E, [StartX, StartY], [EndX, EndY]).
 
 check_boundary(Pos, X, Y, Value) :-
 	atom_length(Pos, Len),
