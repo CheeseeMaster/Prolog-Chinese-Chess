@@ -328,7 +328,7 @@ main :-
 
 play :-
 	current(Player, Board),
-	chessboard_print(Board),
+	board_print(Board),
 	make_play(Player, Board).
 
 make_play(Player, Board) :-
