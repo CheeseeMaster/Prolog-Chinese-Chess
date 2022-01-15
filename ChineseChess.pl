@@ -566,7 +566,6 @@ replace_in_line(Line, X1, X, E1, E2, New_Line, Iterator):-
 	replace_in_line(Line, X1, X, E1, E2, New_Line, Iterator_Next).
 
 move(game_board(A,B,C,D,E,F,G,H,I,J), NewBoard, [X1|[Y1|_]], [X2|[Y2|_]]):-
-	% TODO: check if Player is current player
 	valid_move(game_board(A,B,C,D,E,F,G,H,I,J), X1, Y1, X2, Y2), 
 	functor(NewBoard, game_board, 10),
 	move_from(game_board(A,B,C,D,E,F,G,H,I,J), X1, Y1, Target),
