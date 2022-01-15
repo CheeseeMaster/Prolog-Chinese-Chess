@@ -652,6 +652,7 @@ play :-
 	make_play(Player, Board).
 
 make_play(Player, Board) :-
+	% king_alive(Player, Board),
 	write('entered make_play1'),nl,
 	write('It\'s '),
 	print_player(Player),
