@@ -1,7 +1,6 @@
 :-use_module(library(lists)).
 
 % Init
-:-use_module(library(lists)).
 % Black
 % Marshal(将)-8; Guardian(士)-9; Elephant(象)-10; Horse(马)-11; Chariot(车)-12; Cannon(砲)-13; Pawn(卒)-14
 
